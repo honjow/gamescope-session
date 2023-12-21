@@ -165,7 +165,7 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
       --generate-drm-mode-custom-dir /usr/share/gamescope-session-plus/modelines \
       --force-orientation right "
   fi
-  export STEAM_DISPLAY_REFRESH_LIMITS=61,120
+  export STEAM_DISPLAY_REFRESH_LIMITS=40,120
 fi
 
 # Steam Deck
