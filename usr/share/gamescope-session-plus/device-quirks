@@ -292,6 +292,12 @@ if [[ ":V3:" =~ ":$SYS_ID:"  ]]; then
       --adaptive-sync \
       --generate-drm-mode fixed "
   fi
+
+  # custom-refresh-rates
+  if ( gamescope --help 2>&1 | grep -e "--custom-refresh-rates" > /dev/null ) ; then
+    export GAMESCOPECMD="$GAMESCOPECMD --custom-refresh-rates 60,165"
+  fi
+
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=40,165
 fi
