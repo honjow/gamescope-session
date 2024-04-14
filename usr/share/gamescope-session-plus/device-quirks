@@ -4,8 +4,10 @@
 # ChimeraOS devices).
 export LANG=en_US.UTF-8
 SYS_ID="$(cat /sys/devices/virtual/dmi/id/product_name)"
-CPU_VENDOR="$(env -i sh -l -c "LANG=$LANG lscpu | grep 'Vendor ID' | cut -d : -f 2 | xargs")"
-CPU_MODEL="$(env -i sh -l -c "LANG=$LANG lscpu | grep 'Model name' | cut -d : -f 2 | xargs")"
+# CPU_VENDOR="$(env -i sh -l -c "LANG=$LANG lscpu | grep 'Vendor ID' | cut -d : -f 2 | xargs")"
+# CPU_MODEL="$(env -i sh -l -c "LANG=$LANG lscpu | grep 'Model name' | cut -d : -f 2 | xargs")"
+CPU_VENDOR=$(cat /proc/cpuinfo | grep vendor_id | head -n 1 | cut -d : -f 2 | xargs)
+CPU_MODEL=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -d : -f 2 | xargs)
 
 # OXP Devices
 OXP_LIST="ONE XPLAYER:ONEXPLAYER 1 T08:ONEXPLAYER 1S A08:ONEXPLAYER 1S T08:ONEXPLAYER mini A07:ONEXPLAYER mini GA72:ONEXPLAYER mini GT72:ONEXPLAYER Mini Pro:ONEXPLAYER GUNDAM GA72:ONEXPLAYER 2 ARP23:ONEXPLAYER 2 PRO ARP23P:ONEXPLAYER 2 PRO ARP23P EVA-01"
