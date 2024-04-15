@@ -206,7 +206,8 @@ fi
 
 # GPD Win mini
 if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
-  if ( gamescope --help 2>&1 | grep -e "--force-orientation" > /dev/null ) && [[ "$CPU_MODEL" =~ "8840U" ]] ; then
+  local model_name=$(cat /sys/class/drm/card1-eDP-1/edid | parse-edid 2> /dev/null | grep "ModelName" | cut -d \" -f 2)
+  if ( gamescope --help 2>&1 | grep -e "--force-orientation" > /dev/null ) && [[ "$model_name" == "TL070FVXS01-0" ]] ; then
     export GAMESCOPECMD="/usr/bin/gamescope \
       -e \
       --xwayland-count 2 \
@@ -217,7 +218,12 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
       --adaptive-sync \
       --generate-drm-mode fixed \
       --force-orientation normal "
+    # custom-refresh-rates
+    if ( gamescope --help 2>&1 | grep -e "--custom-refresh-rates" > /dev/null ) ; then
+      export GAMESCOPECMD="$GAMESCOPECMD --custom-refresh-rates 60,70,80,90,100,110,120"
+    fi
   elif ( gamescope --help 2>&1 | grep -e "--force-orientation" > /dev/null ) ; then
+    # model_name is "MINI"
     export GAMESCOPECMD="/usr/bin/gamescope \
       -e \
       --xwayland-count 2 \
