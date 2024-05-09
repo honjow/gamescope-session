@@ -19,7 +19,7 @@ set +a
 # --tap-to-drag
 : "${GAMESCOPE_TAP_TO_DRAG:=1}"
 # --drag-lock
-: "${GAMESCOPE_TAP_DRAG_LOCK:=1}"
+: "${GAMESCOPE_TAP_DRAG_LOCK:=0}"
 
 # --natural-scrolling xxx
 # Natural scrolling for pointer devices
