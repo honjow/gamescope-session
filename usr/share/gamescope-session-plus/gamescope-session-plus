@@ -133,6 +133,18 @@ fi
 # Use specified output connector(s) if set, otherwise use default value
 : "${OUTPUT_CONNECTOR:=*,eDP-1}"
 
+# --tap-to-click
+: "${GAMESCOPE_TAP_TO_CLICK:=1}"
+# --tap-to-drag
+: "${GAMESCOPE_TAP_TO_DRAG:=1}"
+# --drag-lock
+: "${GAMESCOPE_TAP_DRAG_LOCK:=0}"
+# --natural-scrolling xxx
+: "${GAMESCOPE_NATURAL_SCROLL:=touchpad}"
+if (gamescope --help 2>&1 | grep -e "--tap-to-click" >/dev/null); then
+  SUPPORT_TAP_TO_CLICK=true
+fi
+
 if [ -z "$GAMESCOPECMD" ] ; then
     RESOLUTION=""
     if [ -n "$SCREEN_WIDTH" ] && [ -n "$SCREEN_HEIGHT" ] ; then
@@ -163,6 +175,20 @@ if [ -z "$GAMESCOPECMD" ] ; then
         --prefer-vk-device $VULKAN_ADAPTER \
         -R $socket -T $stats"
      fi
+
+    # Pointer options
+    if [[ -n "$SUPPORT_TAP_TO_CLICK" ]]; then
+      if [[ "$GAMESCOPE_TAP_TO_CLICK" == "1" ]]; then
+        export GAMESCOPECMD="$GAMESCOPECMD --tap-to-click"
+      fi
+      if [[ "$GAMESCOPE_TAP_TO_DRAG" == "1" ]]; then
+        export GAMESCOPECMD="$GAMESCOPECMD --tap-to-drag"
+      fi
+      if [[ "$GAMESCOPE_TAP_DRAG_LOCK" == "1" ]]; then
+        export GAMESCOPECMD="$GAMESCOPECMD --drag-lock"
+      fi
+      export GAMESCOPECMD="$GAMESCOPECMD --natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
+    fi
 
 else
     # Add socket and stats read

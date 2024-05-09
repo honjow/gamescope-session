@@ -442,4 +442,18 @@ if [[ ":V3:" =~ ":$SYS_ID:" ]]; then
 
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=40,165
+
+  # Pointer options
+  if [[ -n "$SUPPORT_TAP_TO_CLICK" ]]; then
+    if [[ "$GAMESCOPE_TAP_TO_CLICK" == "1" ]]; then
+      export GAMESCOPECMD="$GAMESCOPECMD --tap-to-click"
+    fi
+    if [[ "$GAMESCOPE_TAP_TO_DRAG" == "1" ]]; then
+      export GAMESCOPECMD="$GAMESCOPECMD --tap-to-drag"
+    fi
+    if [[ "$GAMESCOPE_TAP_DRAG_LOCK" == "1" ]]; then
+      export GAMESCOPECMD="$GAMESCOPECMD --drag-lock"
+    fi
+    export GAMESCOPECMD="$GAMESCOPECMD --natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
+  fi
 fi
