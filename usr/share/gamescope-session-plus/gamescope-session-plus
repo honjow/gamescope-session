@@ -96,6 +96,19 @@ do
 done
 set +a
 
+# Setup background
+product_name=$(cat /sys/class/dmi/id/product_name)
+galileo_background=/usr/share/plymouth/themes/steamos/steamos-galileo.png
+jupiter_background=/usr/share/plymouth/themes/steamos/steamos-jupiter.png
+if [[ $product_name = "Galileo" && -f $galileo_background ]]; then
+    ui_background=$galileo_background
+elif [[ -f $jupiter_background ]]; then
+    ui_background=$jupiter_background
+fi
+if [[ -n $ui_background ]]; then
+    export STEAM_UPDATEUI_PNG_BACKGROUND=${STEAM_UPDATEUI_PNG_BACKGROUND:-$ui_background}
+fi
+
 # Setup socket for gamescope
 # Create run directory file for startup and stats sockets
 tmpdir="$([[ -n ${XDG_RUNTIME_DIR+x} ]] && mktemp -p "$XDG_RUNTIME_DIR" -d -t gamescope.XXXXXXX)"
