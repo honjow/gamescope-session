@@ -285,10 +285,10 @@ if [ -n "$STEAMCMD" ] ; then
 fi
 
 # Start client application
-bash -c "$CLIENTCMD > \"${HOME}/.${CLIENT}-stdout.log\" 2>&1" &
+$CLIENTCMD > "${HOME}/.${CLIENT}-stdout.log" 2>&1 &
 
 if [[ "$CLIENTCMD" =~ "steam" ]]; then
-    if [[ -z $(pidof steam 2>/dev/null) ]]; then
+    if [[ -z "$(pidof steam 2>/dev/null)" ]]; then
         sleep 1
     fi
     sleep 10
