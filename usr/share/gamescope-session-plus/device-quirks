@@ -119,7 +119,7 @@ if [[ ":$AIR_LIST:" =~ ":$SYS_ID:" ]]; then
       --fade-out-duration 200 \
       --force-orientation left "
   if [[ -n "$SUPPORT_CUSTOM_REFRESH_RATES" ]]; then
-    export GAMESCOPECMD="$GAMESCOPECMD --custom-refresh-rates 40-60"
+    export GAMESCOPECMD="$GAMESCOPECMD --custom-refresh-rates 50-60"
   fi
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=40,60
