@@ -216,9 +216,11 @@ fi
 # Attempt to fallback to a desktop session if something goes wrong too many times
 short_session_tracker_file="/tmp/chimeraos-short-session-tracker"
 short_session_duration=60
-short_session_retry_duration=25
 short_session_count_before_reset=3
 SECONDS=0
+
+session_retry_duration=25
+gamescope_retry_duration=10
 
 short_session_count=$(< "$short_session_tracker_file" wc -l)
 
@@ -252,6 +254,22 @@ fi
 echo $GAMESCOPECMD > "${HOME}"/.gamescope-cmd.log
 $GAMESCOPECMD > "${HOME}"/.gamescope-stdout.log 2>&1 &
 gamescope_pid="$!"
+
+while true; do
+    if [[ "$SECONDS" -lt "$gamescope_retry_duration" ]]; then
+        echo ">>>>> SECONDS[$SECONDS], pidof gamescope [$(pidof gamescope 2>/dev/null)]" >>"${HOME}/.gamescope-stdout.log"
+    fi
+    if [[ "$SECONDS" -gt "$gamescope_retry_duration" ]]; then 
+        if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
+            # 在这里执行你的命令
+            echo ">>>>>> pkill gamescope" >>"${HOME}/.gamescope-stdout.log"
+            pkill -HUP gamescope
+        else
+            break
+        fi
+    fi
+    sleep 5
+done &
 
 if read -r -t 3 response_x_display response_wl_display <> "$socket"; then
 	export DISPLAY="$response_x_display"
@@ -289,10 +307,10 @@ fi
 $CLIENTCMD > "${HOME}/.${CLIENT}-stdout.log" 2>&1 &
 
 while true; do
-    if [[ "$SECONDS" -lt "$short_session_retry_duration" ]]; then
+    if [[ "$SECONDS" -lt "$session_retry_duration" ]]; then
         echo ">>>>> SECONDS[$SECONDS], pidof steam [$(pidof steam 2>/dev/null)], pidof opengamepadui [$(pidof opengamepadui 2>/dev/null)]" >>"${HOME}/.${CLIENT}-stdout.log"
     fi
-    if [[ "$SECONDS" -gt "$short_session_retry_duration" ]]; then 
+    if [[ "$SECONDS" -gt "$session_retry_duration" ]]; then 
         if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
             # 在这里执行你的命令
             echo ">>>>>> pkill gamescope and steam" >>"${HOME}/.${CLIENT}-stdout.log"
