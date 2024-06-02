@@ -216,6 +216,7 @@ fi
 # Attempt to fallback to a desktop session if something goes wrong too many times
 short_session_tracker_file="/tmp/chimeraos-short-session-tracker"
 short_session_duration=60
+short_session_retry_duration=25
 short_session_count_before_reset=3
 SECONDS=0
 
@@ -287,12 +288,28 @@ fi
 # Start client application
 $CLIENTCMD > "${HOME}/.${CLIENT}-stdout.log" 2>&1 &
 
+while true; do
+    if [[ "$SECONDS" -lt "$short_session_retry_duration" ]]; then
+        echo ">>>>> SECONDS[$SECONDS], pidof steam [$(pidof steam 2>/dev/null)], pidof opengamepadui [$(pidof opengamepadui 2>/dev/null)]" >>"${HOME}/.${CLIENT}-stdout.log"
+    fi
+    if [[ "$SECONDS" -gt "$short_session_retry_duration" ]]; then 
+        if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
+            # 在这里执行你的命令
+            echo ">>>>>> pkill gamescope and steam" >>"${HOME}/.${CLIENT}-stdout.log"
+            pkill -HUP gamescope && pkill -HUP steam
+        else
+            break
+        fi
+    fi
+    sleep 5
+done &
+
 if [[ "$CLIENTCMD" =~ "steam" ]]; then
     if [[ -z "$(pidof steam 2>/dev/null)" ]]; then
         sleep 1
     fi
     sleep 10
-    pkexec /usr/libexec/renice-steam > .renice-steam.log 2>&1
+    pkexec /usr/libexec/renice-steam > "${HOME}"/.renice-steam.log 2>&1
 fi
 
 # Wait for exit
@@ -308,6 +325,8 @@ fi
 
 # When the client exits, kill gamescope nicely
 kill $gamescope_pid
+
+echo ">>>> 1" >> "${HOME}/.${CLIENT}-stdout.log"
 
 # Start a background sleep for five seconds because we don't trust it
 sleep 5 &
@@ -326,6 +345,8 @@ if [[ -e "$SHUTDOWN_SENTINEL" ]]; then
 	rm "$short_session_tracker_file"
 	poweroff
 fi
+
+echo ">>>> 2" >> "${HOME}/.${CLIENT}-stdout.log"
 
 # Wait for gamescope or the sleep to finish for timeout purposes
 ret=0
@@ -350,3 +371,5 @@ for job in $(jobs -p); do
 	kill -9 "$job"
 done
 
+
+echo ">>>> 3" >> "${HOME}/.${CLIENT}-stdout.log"
