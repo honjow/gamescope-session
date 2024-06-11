@@ -110,20 +110,6 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:" ]]; then
   fi
 
   # Pointer options
-  # if [[ -n "$SUPPORT_TAP_TO_CLICK" ]]; then
-  #   if [[ "$GAMESCOPE_TAP_TO_CLICK" == "1" ]]; then
-  #     export GAMESCOPECMD="$GAMESCOPECMD --tap-to-click"
-  #   fi
-  #   if [[ "$GAMESCOPE_TAP_TO_DRAG" == "1" ]]; then
-  #     export GAMESCOPECMD="$GAMESCOPECMD --tap-to-drag"
-  #   fi
-  #   if [[ "$GAMESCOPE_TAP_DRAG_LOCK" == "1" ]]; then
-  #     export GAMESCOPECMD="$GAMESCOPECMD --drag-lock"
-  #   fi
-  #   export GAMESCOPECMD="$GAMESCOPECMD --natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
-  # fi
-
-  # Pointer options
   TAP_TO_CLICK=1
   TAP_TO_DRAG=1
   TAP_DRAG_LOCK=1

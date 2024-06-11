@@ -245,6 +245,10 @@ if [ -z "$GAMESCOPECMD" ] ; then
         fi
     fi
 
+    CUSTOM_REFRESH_RATES_OPTION=""
+    if [[ -n "$SUPPORT_CUSTOM_REFRESH_RATES" && -n "$CUSTOM_REFRESH_RATES" ]]; then
+        CUSTOM_REFRESH_RATES_OPTION="--custom-refresh-rates $CUSTOM_REFRESH_RATES"
+    fi
     
     GAMESCOPECMD="/usr/bin/gamescope \
         $CURSOR \
@@ -252,6 +256,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
         $INTERNAL_RESOLUTION \
         $ORIENTATION_OPTION \
         $DRM_MODE_OPTION $DRM_MODE_CUSTOM_DIR_OPTION \
+        $CUSTOM_REFRESH_RATES_OPTION \
         $BYPASS_STEAM_RESOLUTION \
         $PANEL_TYPE_OPTION \
         $ADAPTIVE_SYNC_OPTION \
