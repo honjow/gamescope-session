@@ -15,6 +15,14 @@ post_gamescope_start () {
     :
 }
 
+gamescope_has_option() {
+	if (gamescope --help 2>&1 | grep -e "$1" > /dev/null); then
+		return 0
+	fi
+
+	return 1
+}
+
 # Fix intel color corruption
 # might come with some performance degradation but is better than a corrupted
 # color image
@@ -137,18 +145,6 @@ else
     echo >&2 "!! Failed to claim global gamescope stats session"
 fi
 
-if (gamescope --help 2>&1 | grep -e "--tap-to-click" >/dev/null); then
-  SUPPORT_TAP_TO_CLICK=1
-fi
-
-if (gamescope --help 2>&1 | grep -e "--generate-drm-mode-custom-dir" >/dev/null); then
-  SUPPORT_CUSTOM_MODELINES=1
-fi
-
-if (gamescope --help 2>&1 | grep -e "--custom-refresh-rates" >/dev/null); then
-  SUPPORT_CUSTOM_REFRESH_RATES=1
-fi
-
 if [ -z "$GAMESCOPECMD" ] ; then
     # Set default values
     : "${DRM_MODE:=fixed}"
@@ -189,8 +185,8 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     DRM_MODE_CUSTOM_DIR_OPTION=""
-    if [[ -n "$DRM_MODE_CUSTOM_DIR" ]]; then
-        if [[ -n "$SUPPORT_CUSTOM_MODELINES" && -d "$DRM_MODE_CUSTOM_DIR" ]]; then
+    if [[ -n "$DRM_MODE_CUSTOM_DIR" && -d "$DRM_MODE_CUSTOM_DIR" ]]; then
+        if gamescope_has_option "--generate-drm-mode-custom-dir"; then
             DRM_MODE="custom"
             DRM_MODE_CUSTOM_DIR_OPTION="--generate-drm-mode-custom-dir $DRM_MODE_CUSTOM_DIR"
         else
@@ -215,38 +211,36 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     PANEL_TYPE_OPTION=""
-    if [ -n "$PANEL_TYPE" ]; then
+    if [ -n "$PANEL_TYPE" ] && gamescope_has_option "--force-panel-type"; then
         PANEL_TYPE_OPTION="--force-panel-type $PANEL_TYPE"
     fi
 
-    if (gamescope --help 2>&1 | grep -e "--bypass-steam-resolution" >/dev/null); then
+    if gamescope_has_option "--bypass-steam-resolution"; then
         BYPASS_STEAM_RESOLUTION="--bypass-steam-resolution"
-    else
-        BYPASS_STEAM_RESOLUTION=""
-        PANEL_TYPE_OPTION="" # setting panel type requires `--bypass-steam-resolution`
     fi
 
     TAP_TO_CLICK_OPTION=""
+    if [ -n "$GAMESCOPE_TAP_TO_CLICK" ] && gamescope_has_option "--tap-to-click"; then
+        TAP_TO_CLICK_OPTION="--tap-to-click"
+    fi
+
     TAP_TO_DRAG_OPTION=""
+    if [ -n "$GAMESCOPE_TAP_TO_DRAG" ] && gamescope_has_option "--tap-to-drag"; then
+        TAP_TO_DRAG_OPTION="--tap-to-drag"
+    fi
+
     TAP_DRAG_LOCK_OPTION=""
+    if [ -n "$GAMESCOPE_TAP_DRAG_LOCK" ] && gamescope_has_option "--drag-lock"; then
+        TAP_DRAG_LOCK_OPTION="--drag-lock"
+    fi
+
     NATURAL_SCROLL_OPTION=""
-    if [ -n "$SUPPORT_TAP_TO_CLICK" ]; then
-        if [ -n "$GAMESCOPE_TAP_TO_CLICK" ]; then
-            TAP_TO_CLICK_OPTION="--tap-to-click"
-        fi
-        if [ -n "$GAMESCOPE_TAP_TO_DRAG" ]; then
-            TAP_TO_DRAG_OPTION="--tap-to-drag"
-        fi
-        if [ -n "$GAMESCOPE_TAP_DRAG_LOCK" ]; then
-            TAP_DRAG_LOCK_OPTION="--drag-lock"
-        fi
-        if [ -n "$GAMESCOPE_NATURAL_SCROLL" ]; then
-            NATURAL_SCROLL_OPTION="--natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
-        fi
+    if [ -n "$GAMESCOPE_NATURAL_SCROLL" ] && gamescope_has_option "--natural-scrolling"; then
+        NATURAL_SCROLL_OPTION="--natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
     fi
 
     CUSTOM_REFRESH_RATES_OPTION=""
-    if [[ -n "$SUPPORT_CUSTOM_REFRESH_RATES" && -n "$CUSTOM_REFRESH_RATES" ]]; then
+    if [ -n "$CUSTOM_REFRESH_RATES" ] && gamescope_has_option "--custom-refresh-rates"; then
         CUSTOM_REFRESH_RATES_OPTION="--custom-refresh-rates $CUSTOM_REFRESH_RATES"
     fi
     
@@ -323,13 +317,13 @@ echo $GAMESCOPECMD > "${HOME}"/.gamescope-cmd.log
 $GAMESCOPECMD > "${HOME}"/.gamescope-stdout.log 2>&1 &
 gamescope_pid="$!"
 
+# auto pkill to retry gamescope
 while true; do
     if [[ "$SECONDS" -lt "$gamescope_retry_duration" ]]; then
         echo ">>>>> SECONDS[$SECONDS], pidof gamescope [$(pidof gamescope 2>/dev/null)]" >>"${HOME}/.gamescope-stdout.log"
     fi
     if [[ "$SECONDS" -gt "$gamescope_retry_duration" ]]; then 
         if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
-            # 在这里执行你的命令
             echo ">>>>>> pkill gamescope" >>"${HOME}/.gamescope-stdout.log"
             pkill -HUP gamescope
         else
@@ -374,13 +368,13 @@ fi
 # Start client application
 $CLIENTCMD > "${HOME}/.${CLIENT}-stdout.log" 2>&1 &
 
+# auto pkill to retry session
 while true; do
     if [[ "$SECONDS" -lt "$session_retry_duration" ]]; then
         echo ">>>>> SECONDS[$SECONDS], pidof steam [$(pidof steam 2>/dev/null)], pidof opengamepadui [$(pidof opengamepadui 2>/dev/null)]" >>"${HOME}/.${CLIENT}-stdout.log"
     fi
     if [[ "$SECONDS" -gt "$session_retry_duration" ]]; then 
         if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
-            # 在这里执行你的命令
             echo ">>>>>> pkill gamescope and steam" >>"${HOME}/.${CLIENT}-stdout.log"
             pkill -HUP gamescope && pkill -HUP steam
         else
@@ -412,7 +406,7 @@ fi
 # When the client exits, kill gamescope nicely
 kill $gamescope_pid
 
-echo ">>>> 1" >> "${HOME}/.${CLIENT}-stdout.log"
+echo ">>>> 1 after kill $gamescope_pid" >> "${HOME}/.${CLIENT}-stdout.log"
 
 # Start a background sleep for five seconds because we don't trust it
 sleep 5 &
@@ -432,7 +426,7 @@ if [[ -e "$SHUTDOWN_SENTINEL" ]]; then
     poweroff
 fi
 
-echo ">>>> 2" >> "${HOME}/.${CLIENT}-stdout.log"
+echo ">>>> 2 after kill $gamescope_pid" >> "${HOME}/.${CLIENT}-stdout.log"
 
 # Wait for gamescope or the sleep to finish for timeout purposes
 ret=0
@@ -458,4 +452,4 @@ for job in $(jobs -p); do
 done
 
 
-echo ">>>> 3" >> "${HOME}/.${CLIENT}-stdout.log"
+echo ">>>> 3 end" >> "${HOME}/.${CLIENT}-stdout.log"
