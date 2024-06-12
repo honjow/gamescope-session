@@ -16,11 +16,11 @@ post_gamescope_start () {
 }
 
 gamescope_has_option() {
-	if (gamescope --help 2>&1 | grep -e "$1" > /dev/null); then
-		return 0
-	fi
+    if (gamescope --help 2>&1 | grep -e "$1" > /dev/null); then
+        return 0
+    fi
 
-	return 1
+    return 1
 }
 
 # Fix intel color corruption
@@ -62,12 +62,12 @@ export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
 # so we don't get mangoapp showing up before Steam initializes
 # on OOBE and stuff.
 mkdir -p "$(dirname "$MANGOHUD_CONFIGFILE")"
-echo "no_display" > "$MANGOHUD_CONFIGFILE"
+echo "no_display" >"$MANGOHUD_CONFIGFILE"
 
 # Prepare our initial VRS config file
 # for dynamic VRS in Mesa.
 mkdir -p "$(dirname "$RADV_FORCE_VRS_CONFIG_FILE")"
-echo "1x1" > "$RADV_FORCE_VRS_CONFIG_FILE"
+echo "1x1" >"$RADV_FORCE_VRS_CONFIG_FILE"
 
 # To expose vram info from radv
 export WINEDLLOVERRIDES=dxgi=n
@@ -85,21 +85,19 @@ ulimit -n 524288
 
 # Source device quirks if exists
 if [ -f /usr/share/gamescope-session-plus/device-quirks ]; then
-  . /usr/share/gamescope-session-plus/device-quirks
+    . /usr/share/gamescope-session-plus/device-quirks
 fi
 
 # Source client app specific configuration files
 set -a
-for i in ${CLIENT_CONFIG_DIR_USR}/${CLIENT} ${CLIENT_CONFIG_DIR_ETC}/${CLIENT} ${CLIENT_CONFIG_DIR_LOCAL}/${CLIENT} ;
-do
+for i in ${CLIENT_CONFIG_DIR_USR}/${CLIENT} ${CLIENT_CONFIG_DIR_ETC}/${CLIENT} ${CLIENT_CONFIG_DIR_LOCAL}/${CLIENT}; do
     [[ -f "${i}" ]] && . "${i}"
 done
 set +a
 
 # Source user configuration from ~/.config/environment.d
 set -a
-for i in "${HOME}"/.config/environment.d/*.conf ;
-do
+for i in "${HOME}"/.config/environment.d/*.conf; do
     [[ -f "${i}" ]] && . "${i}"
 done
 set +a
@@ -284,7 +282,7 @@ SECONDS=0
 session_retry_duration=25
 gamescope_retry_duration=10
 
-short_session_count=$(< "$short_session_tracker_file" wc -l)
+short_session_count=$(wc <"$short_session_tracker_file" -l)
 
 if [[ "$short_session_count" -ge "$short_session_count_before_reset" ]]; then
     echo >&2 "gamescope-session-plus: detected broken ${CLIENT} or gamescope failure, will try to reset the session"
@@ -313,8 +311,8 @@ if [ -f "${HOME}"/.renice-steam.log ]; then
 fi
 
 # Start gamescope compositor, log it's output and background it
-echo $GAMESCOPECMD > "${HOME}"/.gamescope-cmd.log
-$GAMESCOPECMD > "${HOME}"/.gamescope-stdout.log 2>&1 &
+echo $GAMESCOPECMD >"${HOME}"/.gamescope-cmd.log
+$GAMESCOPECMD >"${HOME}"/.gamescope-stdout.log 2>&1 &
 gamescope_pid="$!"
 
 # auto pkill to retry gamescope
@@ -349,7 +347,7 @@ fi
 post_gamescope_start
 
 # Input method support if present
-if command -v /usr/bin/ibus-daemon > /dev/null; then
+if command -v /usr/bin/ibus-daemon >/dev/null; then
     /usr/bin/ibus-daemon -d -r --panel=disable --emoji-extension=disable
 fi
 
