@@ -174,4 +174,6 @@ if [[ ":V3:" =~ ":$SYS_ID:" ]]; then
   TAP_TO_DRAG=1
   TAP_DRAG_LOCK=1
   NATURAL_SCROLL=touchpad
+
+  GAMESCOPE_TOUCH_GESTURES=1
 fi
