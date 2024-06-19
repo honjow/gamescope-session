@@ -146,8 +146,7 @@ if [[ ":Galileo:" =~ ":$SYS_ID:" ]]; then
 fi
 
 # ROG Ally
-ALLY_LIST="ROG Ally RC71L_RC71L:ROG Ally RC71L"
-if [[ ":$ALLY_LIST:" =~ ":$SYS_ID:" ]]; then
+if [[ "$SYS_ID" =~ "ROG Ally RC71L" ]]; then
   ADAPTIVE_SYNC=1
   ORIENTATION=normal
   CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
