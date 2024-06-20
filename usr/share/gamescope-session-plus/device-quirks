@@ -18,7 +18,7 @@ if [[ ":$OXP_LIST:" =~ ":$SYS_ID:" ]] || [[ ":$AOK_LIST:" =~ ":$SYS_ID:" ]]; the
   else
     OUTPUT_CONNECTOR='*,eDP-1'
   fi
-  
+
   ORIENTATION=left
   CUSTOM_REFRESH_RATES="40-60"
 
@@ -51,6 +51,9 @@ if [[ ":$FLIP_LIST:" =~ ":$SYS_ID:" ]]; then
   CUSTOM_REFRESH_RATES="60,80,90,100,110,120"
 
   export STEAM_DISPLAY_REFRESH_LIMITS=40,120
+  if [[ "$SYS_ID" == "FLIP DS" ]]; then
+    OUTPUT_CONNECTOR='*,eDP-2'
+  fi
 fi
 
 # AYANEO Plus
