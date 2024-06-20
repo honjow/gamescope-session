@@ -52,7 +52,7 @@ if [[ ":$FLIP_LIST:" =~ ":$SYS_ID:" ]]; then
 
   export STEAM_DISPLAY_REFRESH_LIMITS=40,120
   if [[ "$SYS_ID" == "FLIP DS" ]]; then
-    OUTPUT_CONNECTOR='*,eDP-2'
+    OUTPUT_CONNECTOR='*,eDP-1,eDP-2'
   fi
 fi
 
