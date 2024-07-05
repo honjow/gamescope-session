@@ -232,9 +232,39 @@ if [ -z "$GAMESCOPECMD" ] ; then
         TAP_DRAG_LOCK_OPTION="--drag-lock"
     fi
 
+    MIDDLE_EMULATION_OPTION=""
+    if [ -n "$GAMESCOPE_MIDDLE_EMULATION" ] && gamescope_has_option "--middle-emulation"; then
+        MIDDLE_EMULATION_OPTION="--middle-emulation"
+    fi
+
+    LEFT_HANDED_OPTION=""
+    if [ -n "$GAMESCOPE_LEFT_HANDED" ] && gamescope_has_option "--left-handed"; then
+        LEFT_HANDED_OPTION="--left-handed"
+    fi
+
+    DISABLE_WHILE_TYPING_OPTION=""
+    if [ -n "$GAMESCOPE_DISABLE_WHILE_TYPING" ] && gamescope_has_option "--disable-while-typing"; then
+        DISABLE_WHILE_TYPING_OPTION="--disable-while-typing"
+    fi
+
+    DISABLE_WHILE_TRACKPOINTING_OPTION=""
+    if [ -n "$GAMESCOPE_DISABLE_WHILE_TRACKPOINTING" ] && gamescope_has_option "--disable-while-trackpointing"; then
+        DISABLE_WHILE_TRACKPOINTING_OPTION="--disable-while-trackpointing"
+    fi
+
     NATURAL_SCROLL_OPTION=""
     if [ -n "$GAMESCOPE_NATURAL_SCROLL" ] && gamescope_has_option "--natural-scrolling"; then
         NATURAL_SCROLL_OPTION="--natural-scrolling $GAMESCOPE_NATURAL_SCROLL"
+    fi
+
+    POINTER_ACCEL_PROFILE_OPTION=""
+    if [ -n "$GAMESCOPE_POINTER_ACCEL_PROFILE" ] && gamescope_has_option "--pointer-accel-profile"; then
+        POINTER_ACCEL_PROFILE_OPTION="--pointer-accel-profile $GAMESCOPE_POINTER_ACCEL_PROFILE"
+    fi
+
+    POINTER_ACCEL_SPEED_OPTION=""
+    if [ -n "$GAMESCOPE_POINTER_ACCEL_SPEED" ] && gamescope_has_option "--pointer-accel-speed"; then
+        POINTER_ACCEL_SPEED_OPTION="--pointer-accel-speed $GAMESCOPE_POINTER_ACCEL_SPEED"
     fi
 
     CUSTOM_REFRESH_RATES_OPTION=""
@@ -260,7 +290,13 @@ if [ -z "$GAMESCOPECMD" ] ; then
         $TAP_TO_CLICK_OPTION \
         $TAP_TO_DRAG_OPTION \
         $TAP_DRAG_LOCK_OPTION \
+        $MIDDLE_EMULATION_OPTION \
+        $LEFT_HANDED_OPTION \
+        $DISABLE_WHILE_TYPING_OPTION \
+        $DISABLE_WHILE_TRACKPOINTING_OPTION \
         $NATURAL_SCROLL_OPTION \
+        $POINTER_ACCEL_PROFILE_OPTION \
+        $POINTER_ACCEL_SPEED_OPTION \
         $TOUCH_GESTURES_OPTION \
         --prefer-output $OUTPUT_CONNECTOR \
         --xwayland-count $XWAYLAND_COUNT \
