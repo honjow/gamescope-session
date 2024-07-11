@@ -153,8 +153,8 @@ if [ -z "$GAMESCOPECMD" ] ; then
     : "${FADE_OUT_DURATION_MS:=200}"
     # --tap-to-click
     : "${GAMESCOPE_TAP_TO_CLICK:=1}"
-    # --tap-to-drag
-    : "${GAMESCOPE_TAP_TO_DRAG:=1}"
+    # --tap-and-drag
+    : "${GAMESCOPE_TAP_AND_DRAG:=1}"
     # --drag-lock
     # : "${GAMESCOPE_TAP_DRAG_LOCK:=}"
     
@@ -222,9 +222,9 @@ if [ -z "$GAMESCOPECMD" ] ; then
         TAP_TO_CLICK_OPTION="--tap-to-click"
     fi
 
-    TAP_TO_DRAG_OPTION=""
-    if [ -n "$GAMESCOPE_TAP_TO_DRAG" ] && gamescope_has_option "--tap-to-drag"; then
-        TAP_TO_DRAG_OPTION="--tap-to-drag"
+    TAP_AND_DRAG_OPTION=""
+    if [ -n "$GAMESCOPE_TAP_AND_DRAG" ] && gamescope_has_option "--tap-and-drag"; then
+        TAP_AND_DRAG_OPTION="--tap-and-drag"
     fi
 
     TAP_DRAG_LOCK_OPTION=""
@@ -288,7 +288,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
         $PANEL_TYPE_OPTION \
         $ADAPTIVE_SYNC_OPTION \
         $TAP_TO_CLICK_OPTION \
-        $TAP_TO_DRAG_OPTION \
+        $TAP_AND_DRAG_OPTION \
         $TAP_DRAG_LOCK_OPTION \
         $MIDDLE_EMULATION_OPTION \
         $LEFT_HANDED_OPTION \
