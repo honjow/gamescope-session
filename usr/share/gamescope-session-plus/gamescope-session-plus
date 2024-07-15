@@ -154,7 +154,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
     # --tap-to-click
     : "${GAMESCOPE_TAP_TO_CLICK:=1}"
     # --tap-and-drag
-    : "${GAMESCOPE_TAP_AND_DRAG:=1}"
+    # : "${GAMESCOPE_TAP_AND_DRAG:=1}"
     # --drag-lock
     # : "${GAMESCOPE_TAP_DRAG_LOCK:=}"
     
