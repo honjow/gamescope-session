@@ -134,8 +134,7 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
     DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
   else
     CUSTOM_REFRESH_RATES=60,70,80,90,100,110,120
-    DRM_MODE=custom
-    DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
+    ORIENTATION=normal
   fi
 
   # Pointer options
