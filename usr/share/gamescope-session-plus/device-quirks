@@ -70,17 +70,6 @@ if [[ ":$OXP_X1_144_LIST:" =~ ":$SYS_ID:"  ]]; then
   export STEAM_DISPLAY_REFRESH_LIMITS=60,144
 fi
 
-# Orange Pi Neo
-if [[ "$SYS_ID" =~ "NEO-01" ]]; then
-  # PANEL_TYPE=external
-  ORIENTATION=right
-  DRM_MODE=custom
-  DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
-
-  # Set refresh rate range and enable refresh rate switching
-  export STEAM_DISPLAY_REFRESH_LIMITS=40,120
-fi
-
 # AYANEO AIR, SLIDE Devices
 AIR_LIST="AIR:AIR Pro:AIR Plus:SLIDE:AIR 1S:AIR 1S Limited"
 if [[ ":$AIR_LIST:" =~ ":$SYS_ID:"  ]]; then
