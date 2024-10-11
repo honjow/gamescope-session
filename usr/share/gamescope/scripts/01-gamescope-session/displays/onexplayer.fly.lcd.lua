@@ -24,7 +24,7 @@ gamescope.config.known_displays.oxpfly_lcd = {
     -- it should be able to handle this method, and it is more optimal for latency
     -- than elongating the clock.
     dynamic_modegen = function(base_mode, refresh)
-        debug("Generating mode "..refresh.."Hz for OneXPlayer Fly with fixed pixel clock")
+        debug("Generating mode "..refresh.."Hz for OneXPlayer Fly")
         local vfps = {
             2014, 1949, 1886, 1825, 1766, 
             1709, 1653, 1599, 1547, 1496, 
@@ -64,4 +64,4 @@ gamescope.config.known_displays.oxpfly_lcd = {
     end
 }
 debug("Registered OneXPlayer Fly as a known display")
-debug(inspect(gamescope.config.known_displays.oxpfly_lcd))
+-- debug(inspect(gamescope.config.known_displays.oxpfly_lcd))
