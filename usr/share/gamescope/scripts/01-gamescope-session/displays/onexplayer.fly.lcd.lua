@@ -1,5 +1,5 @@
 local onexplayer_fly_lcd_refresh_rates = {}
-for i = 60, 120 do
+for i = 61, 120 do
     table.insert(onexplayer_fly_lcd_refresh_rates, i)
 end
 
@@ -39,7 +39,7 @@ gamescope.config.known_displays.oxpfly_lcd = {
             209, 190, 171, 152, 133, 
             115, 97, 80, 62, 45, 29
         }
-        local vfp = vfps[zero_index(refresh - 60)]
+        local vfp = vfps[refresh - 60]
         if vfp == nil then
             warn("Couldn't do refresh "..refresh.." on OneXPlayer Fly")
             return base_mode
