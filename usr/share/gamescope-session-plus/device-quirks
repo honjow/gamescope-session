@@ -46,10 +46,10 @@ fi
 if [[ "$SYS_ID" =~ "ONEXPLAYER F1" ]]; then
   # PANEL_TYPE=external
   ORIENTATION=left
-  if [[ ! -f "${SCRIPTS_DISPLAY_DIR}/onexplayer.fly.lcd.lua" ]]; then
-    DRM_MODE=custom
-    DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
-  fi
+  # if [[ ! -f "${SCRIPTS_DISPLAY_DIR}/onexplayer.fly.lcd.lua" ]]; then
+  #   DRM_MODE=custom
+  #   DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
+  # fi
 
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=40,120
