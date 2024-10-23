@@ -56,8 +56,9 @@ gamescope.config.known_displays.oxpfly_lcd = {
 
 
     matches = function(display)
-        if display.vendor == "BOE" and ""..display.model == "" then
-            debug("[oxpfly_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
+        if display.vendor == "BOE" and ""..display.model == "" and display.product == 0x212 then
+            local product_hex = string.format("0x%X", display.product)
+            debug("[oxpfly_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..product_hex)
             return 5000
         end
         return -1
