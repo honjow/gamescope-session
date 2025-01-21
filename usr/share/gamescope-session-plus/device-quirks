@@ -116,7 +116,7 @@ AIR_PLUS_LIST="AIR Plus:SLIDE"
 if [[ ":$AIR_PLUS_LIST:" =~ ":$SYS_ID:"  ]]; then
   # PANEL_TYPE=external
   ORIENTATION=left
-  if lua_not_exists "ayaneo.airplus.lcd.lua"; then
+  if lua_not_exists "AYA-AYANEOHD.lua"; then
       CUSTOM_REFRESH_RATES=40-60
   else
       unset CUSTOM_REFRESH_RATES
@@ -165,7 +165,7 @@ fi
 
 #GPD Win 4 supports 40-60hz refresh rate changing
 if [[ ":G1618-04:" =~ ":$SYS_ID:"  ]]; then
-  if lua_not_exists "gpd.win4.lcd.lua"; then
+  if lua_not_exists "GPD-G1618-04.lua"; then
       CUSTOM_REFRESH_RATES=40-60
   fi
   export STEAM_DISPLAY_REFRESH_LIMITS=40,60
@@ -202,7 +202,7 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
   if [[ "$model_name" == "MINI" ]] || ( xrandr --prop 2>$1 | grep -e "1080x1920 " > /dev/null ) ; then
     # model_name is "MINI"
     ORIENTATION=right
-    if lua_not_exists "gpd.winmini.lcd.lua"; then
+    if lua_not_exists "GPD-MINI.lua"; then
         DRM_MODE=custom
         DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
     fi
@@ -210,7 +210,7 @@ if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
     # model_name is "TL070FVXS01-0"
     ADAPTIVE_SYNC=1
     ORIENTATION=normal
-    if [[ "$model_name" == "" ]] || lua_not_exists "asus.rogally.lcd.lua"; then
+    if [[ "$model_name" == "" ]] || lua_not_exists "TMX-TL070FVXS01-0.lua"; then
         CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
     fi
   fi
@@ -280,7 +280,7 @@ if [[ ":$ALLY_LIST:" =~ ":$SYS_ID:"  ]]; then
   # PANEL_TYPE=external
   ADAPTIVE_SYNC=1
   # CUSTOM_REFRESH_RATES=60,70,80,90,100,110,120
-  if lua_not_exists "asus.rogally.lcd.lua" || "$model_name" == ""; then
+  if lua_not_exists "TMX-TL070FVXS01-0.lua" || "$model_name" == ""; then
       CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
   fi
 
@@ -323,6 +323,9 @@ if [[ ":$ZOTAC_LIST:" =~ ":$SYS_ID:"  ]]; then
   PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=60,90,120
+
+  export STEAM_GAMESCOPE_FORCE_HDR_DEFAULT=1
+  export STEAM_GAMESCOPE_FORCE_OUTPUT_TO_HDR10PQ_DEFAULT=1
 
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=60,120
