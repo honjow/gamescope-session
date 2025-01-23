@@ -184,7 +184,8 @@ if [[ ":G1619-04:" =~ ":$SYS_ID:"  ]]; then
 fi
 
 # GPD Win mini
-if [[ ":G1617-01:" =~ ":$SYS_ID:"  ]]; then
+WINMINI_LIST="G1617-01:G1617-02"
+if [[ ":$WINMINI_LIST:" =~ ":$SYS_ID:"  ]]; then
   # ORIENTATION=""
   # if ( xrandr --prop 2>$1 | grep -e "1080x1920 " > /dev/null ) ; then
   #   ORIENTATION=right
