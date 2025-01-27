@@ -336,12 +336,24 @@ fi
 # ZOTAC Devices
 ZOTAC_LIST="ZOTAC GAMING ZONE"
 if [[ ":$ZOTAC_LIST:" =~ ":$SYS_ID:"  ]]; then
-  PANEL_TYPE=external
+  # PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=60,90,120
 
   export STEAM_GAMESCOPE_FORCE_HDR_DEFAULT=1
   export STEAM_GAMESCOPE_FORCE_OUTPUT_TO_HDR10PQ_DEFAULT=1
+
+  # Set refresh rate range and enable refresh rate switching
+  export STEAM_DISPLAY_REFRESH_LIMITS=60,120
+fi
+
+# MSI Claw 8
+CLAW_LIST="Claw 8 AI+ A2VM"
+if [[ ":$CLAW_LIST:" =~ ":$SYS_ID:"  ]]; then
+  ADAPTIVE_SYNC=1
+  ENABLE_VRR_MODESET=1
+  ENABLE_HACKY_TEXTURE=1
+  CUSTOM_REFRESH_RATES=60-120
 
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=60,120
