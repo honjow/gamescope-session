@@ -14,7 +14,7 @@ CPU_MODEL=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -d : -f 2 | 
 
 SCRIPTS_DIR="/usr/share/gamescope/scripts/"
 
-function lua_not_exists() {
+function not_lua_exists() {
   # 返回值 1:存在 0:不存在
   local dir=${2:-$SCRIPTS_DIR}
   local file=$1
@@ -116,7 +116,7 @@ AIR_PLUS_LIST="AIR Plus:SLIDE"
 if [[ ":$AIR_PLUS_LIST:" =~ ":$SYS_ID:"  ]]; then
   # PANEL_TYPE=external
   ORIENTATION=left
-  if lua_not_exists "AYA-AYANEOHD.lua"; then
+  if not_lua_exists "AYA-AYANEOHD.lua"; then
       CUSTOM_REFRESH_RATES=40-60
   else
       unset CUSTOM_REFRESH_RATES
@@ -165,7 +165,7 @@ fi
 
 #GPD Win 4 supports 40-60hz refresh rate changing
 if [[ ":G1618-04:" =~ ":$SYS_ID:"  ]]; then
-  if lua_not_exists "GPD-G1618-04.lua"; then
+  if not_lua_exists "GPD-G1618-04.lua"; then
       CUSTOM_REFRESH_RATES=40-60
   fi
   export STEAM_DISPLAY_REFRESH_LIMITS=40,60
@@ -203,7 +203,7 @@ if [[ ":$WINMINI_LIST:" =~ ":$SYS_ID:"  ]]; then
   if [[ "$model_name" == "MINI" ]] || ( xrandr --prop 2>$1 | grep -e "1080x1920 " > /dev/null ) ; then
     # model_name is "MINI"
     ORIENTATION=right
-    if lua_not_exists "GPD-MINI.lua"; then
+    if not_lua_exists "GPD-MINI.lua"; then
         DRM_MODE=custom
         DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
     fi
@@ -211,7 +211,7 @@ if [[ ":$WINMINI_LIST:" =~ ":$SYS_ID:"  ]]; then
     # model_name is "TL070FVXS01-0"
     ADAPTIVE_SYNC=1
     ORIENTATION=normal
-    if [[ "$model_name" == "" ]] || lua_not_exists "TMX-TL070FVXS01-0.lua"; then
+    if [[ "$model_name" == "" ]] || not_lua_exists "TMX-TL070FVXS01-0.lua"; then
         CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
     fi
   fi
@@ -283,7 +283,7 @@ if [[ ":$ALLY_LIST:" =~ ":$SYS_ID:"  ]]; then
   ENABLE_VRR_MODESET=1
   ENABLE_HACKY_TEXTURE=1
   # CUSTOM_REFRESH_RATES=60,70,80,90,100,110,120
-  if lua_not_exists "TMX-TL070FVXS01-0.lua" || "$model_name" == ""; then
+  if not_lua_exists "TMX-TL070FVXS01-0.lua" || "$model_name" == ""; then
       CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
   fi
 
@@ -294,7 +294,7 @@ fi
 # Lenovo Legion Go
 if [[ ":83E1:" =~ ":$SYS_ID:"  ]]; then
   ORIENTATION=left
-  if lua_not_exists "lenovo.legiongo.lcd.lua"; then
+  if not_lua_exists "lenovo.legiongo.lcd.lua"; then
       CUSTOM_REFRESH_RATES=60,90,120,144
   fi
 
@@ -352,7 +352,7 @@ CLAW_LIST="Claw 8 AI+ A2VM"
 if [[ ":$CLAW_LIST:" =~ ":$SYS_ID:"  ]]; then
   ADAPTIVE_SYNC=1
   ENABLE_VRR_MODESET=1
-  ENABLE_HACKY_TEXTURE=1
+  # ENABLE_HACKY_TEXTURE=1
   CUSTOM_REFRESH_RATES=60-120
 
   # Set refresh rate range and enable refresh rate switching
