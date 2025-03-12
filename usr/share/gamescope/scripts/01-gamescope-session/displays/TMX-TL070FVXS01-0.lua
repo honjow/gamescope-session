@@ -65,9 +65,16 @@ gamescope.config.known_displays.rogally_lcd = {
     -- There is only a single panel model in use across both
     -- ROG Ally + ROG Ally X.
     matches = function(display)
-        if display.vendor == "TMX" and display.model == "TL070FVXS01-0" then
-            debug("[rogally_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
-            return 4000
+        local lcd_types = {
+            { vendor = "TMX", model = "TL070FVXS01-0" }, -- ROG Ally/Ally X
+            { vendor = "TMA", model = "TL070FDXS01" }, -- GPD Win mini 2025
+        }
+
+        for index, value in ipairs(lcd_types) do
+            if value.vendor == display.vendor and value.model == display.model then
+                debug("[rogally_lcd] Matched vendor: "..value.vendor.." model: "..value.model)
+                return 4000
+            end
         end
         return -1
     end
