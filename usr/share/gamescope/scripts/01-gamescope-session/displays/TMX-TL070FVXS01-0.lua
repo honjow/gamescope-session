@@ -9,8 +9,10 @@ local rogally_lcd_refresh_rates = {
     118, 119, 120
 }
 
+local rogally_lcd_name = "ASUS ROG Ally/Ally X LCD/GPD WinMini 2024/GPD WinMini 2025"
+
 gamescope.config.known_displays.rogally_lcd = {
-    pretty_name = "ASUS ROG Ally/Ally X LCD/GPD WinMini 2024/GPD WinMini 2025",
+    pretty_name = rogally_lcd_name,
     hdr = {
         -- Setup some fallbacks for undocking with HDR, meant
         -- for the internal panel. It does not support HDR.
@@ -66,18 +68,18 @@ gamescope.config.known_displays.rogally_lcd = {
     -- ROG Ally + ROG Ally X.
     matches = function(display)
         local lcd_types = {
-            { vendor = "TMX", model = "TL070FVXS01-0" }, -- ROG Ally/Ally X
-            { vendor = "TMA", model = "TL070FDXS01" }, -- GPD Win mini 2025
+            { vendor = "TMX", model = "TL070FVXS01-0", name = "ROG Ally/Ally X" }, -- ROG Ally/Ally X
+            { vendor = "TMA", model = "TL070FDXS01", name = "GPD Win mini 2025" }, -- GPD Win mini 2025
         }
 
         for index, value in ipairs(lcd_types) do
             if value.vendor == display.vendor and value.model == display.model then
-                debug("[rogally_lcd] Matched vendor: "..value.vendor.." model: "..value.model)
+                info("["..value.name.."] Matched vendor: "..value.vendor.." model: "..value.model)
                 return 4000
             end
         end
         return -1
     end
 }
-debug("Registered ASUS ROG Ally/Ally X LCD as a known display")
---debug(inspect(gamescope.config.known_displays.rogally_lcd))
+info("Registered "..rogally_lcd_name.." as a known display")
+info(inspect(gamescope.config.known_displays.rogally_lcd))
