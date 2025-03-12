@@ -68,8 +68,9 @@ gamescope.config.known_displays.rogally_lcd = {
     -- ROG Ally + ROG Ally X.
     matches = function(display)
         local lcd_types = {
-            { vendor = "TMX", model = "TL070FVXS01-0", name = "ROG Ally/Ally X" }, -- ROG Ally/Ally X
-            { vendor = "TMA", model = "TL070FDXS01", name = "GPD Win mini 2025" }, -- GPD Win mini 2025
+            { vendor = "TMX", model = "TL070FVXS01-0", name = "ROG Ally/Ally X/GPD Win mini 2024" },
+            { vendor = "TMA", model = "TL070FVXS02-0", name = "MSI Claw" },
+            { vendor = "TMA", model = "TL070FDXS01", name = "GPD Win mini 2025" },
         }
 
         for index, value in ipairs(lcd_types) do
