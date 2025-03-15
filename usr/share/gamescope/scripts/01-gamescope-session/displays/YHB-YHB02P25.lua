@@ -3,13 +3,13 @@
 gamescope.config.known_displays.onexplayer_fly_oled = {
     pretty_name = "OneXPlayer Fly OLED",
     dynamic_refresh_rates = {
-        60, 90, 120, 144
+        60, 72, 90, 120, 144
     },
     hdr = {
         supported = true,
         force_enabled = true,
-        eotf = gamescope.eotf.gamma22,
-        max_content_light_level = 700,
+        eotf = gamescope.eotf.ST2084,
+        max_content_light_level = 687.448,
         max_frame_average_luminance = 400,
         min_content_light_level = 0
     },
