@@ -71,16 +71,18 @@ gamescope.config.known_displays.rogally_lcd = {
             { vendor = "TMX", model = "TL070FVXS01-0", name = "ROG Ally/Ally X/GPD Win mini 2024" },
             { vendor = "TMA", model = "TL070FVXS02-0", name = "MSI Claw" },
             { vendor = "TMA", model = "TL070FDXS01", name = "GPD Win mini 2025" },
+            { vendor = "BOE", product = 0x0C33, name = "ROG Ally X" }, -- BOE-TS070FHM-LU0
         }
 
         for index, value in ipairs(lcd_types) do
-            if value.vendor == display.vendor and value.model == display.model then
-                info("["..value.name.."] Matched vendor: "..value.vendor.." model: "..value.model)
+            if (value.vendor == display.vendor and value.model == display.model) or 
+                (value.vendor == display.vendor and value.product == display.product) then
+                info("["..value.name.."] Matched vendor: "..value.vendor.." model: "..value.model.." product: "..display.product)
                 return 4000
             end
         end
         return -1
     end
 }
-info("Registered "..rogally_lcd_name.." as a known display")
-info(inspect(gamescope.config.known_displays.rogally_lcd))
+debug("Registered "..rogally_lcd_name.." as a known display")
+debug(inspect(gamescope.config.known_displays.rogally_lcd))
