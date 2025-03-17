@@ -211,7 +211,7 @@ if [[ ":$WINMINI_LIST:" =~ ":$SYS_ID:"  ]]; then
     # model_name is "TL070FVXS01-0"
     ADAPTIVE_SYNC=1
     ORIENTATION=normal
-    if [[ "$model_name" == "" ]] || not_lua_exists "TMX-TL070FVXS01-0.lua"; then
+    if [[ "$model_name" == "" ]] || not_lua_exists "asus.rogally.lcd.lua"; then
         CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
     fi
   fi
@@ -283,7 +283,7 @@ if [[ ":$ALLY_LIST:" =~ ":$SYS_ID:"  ]]; then
   ENABLE_VRR_MODESET=1
   ENABLE_HACKY_TEXTURE=1
   # CUSTOM_REFRESH_RATES=60,70,80,90,100,110,120
-  if not_lua_exists "TMX-TL070FVXS01-0.lua" || "$model_name" == ""; then
+  if not_lua_exists "asus.rogally.lcd.lua" || "$model_name" == ""; then
       CUSTOM_REFRESH_RATES="60,70,80,90,100,110,120"
   fi
 
