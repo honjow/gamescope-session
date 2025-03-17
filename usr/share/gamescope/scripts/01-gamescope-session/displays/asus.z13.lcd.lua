@@ -34,7 +34,7 @@ gamescope.config.known_displays.asusz13_lcd = {
         }
         local vfp = vfps[zero_index(refresh - 48)]
         if vfp == nil then
-            warn("Couldn't do refresh "..refresh.." on ROG Ally")
+            warn("Couldn't do refresh "..refresh.." on ASUS Z13")
             return base_mode
         end
 
@@ -54,4 +54,4 @@ gamescope.config.known_displays.asusz13_lcd = {
         return -1
     end
 }
-debug("Registered Lenovo Legion Go S LCD as a known display")
+debug("Registered ASUS Z13 LCD as a known display")
