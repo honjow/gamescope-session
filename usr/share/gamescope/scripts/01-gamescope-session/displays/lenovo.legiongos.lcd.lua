@@ -1,27 +1,30 @@
-gamescope.config.known_displays.legiongos_lcd = {
-    pretty_name = "Lenovo Legion Go S LCD",
-    hdr = {
-        -- Setup some fallbacks for undocking with HDR, meant
-        -- for the internal panel. It does not support HDR.
-        supported = false,
-        force_enabled = false,
-        eotf = gamescope.eotf.gamma22,
-        max_content_light_level = 500,
-        max_frame_average_luminance = 500,
-        min_content_light_level = 0.5
-    },
-    
-    dynamic_refresh_rates = {
-        48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
-        58, 59, 60, 61, 62, 63, 64, 65, 66, 67,
-        68, 69, 70, 71, 72, 73, 74, 75, 76, 77,
-        78, 79, 80, 81, 82, 83, 84, 85, 86, 87,
-        88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-        98, 99, 100, 101, 102, 103, 104, 105, 106, 107,
-        108, 109, 110, 111, 112, 113, 114, 115, 116, 117,
-        118, 119, 120
-    },
-    
+-- Lenovo Legion Go S
+-- MSI Claw 8
+
+local panel_id = "lenovo_legiongo_lcd"
+local panel_name = "Lenovo Legion Go S/MSI Claw 8 LCD"
+
+local panel_refresh_rates = {}
+for hz = 48, 120 do
+  table.insert(panel_refresh_rates, hz)
+end
+
+local panel_hdr = {
+    supported = false,
+    force_enabled = false,
+    eotf = gamescope.eotf.gamma22,
+    max_content_light_level = 500,
+    max_frame_average_luminance = 500,
+    min_content_light_level = 0.5
+}
+
+gamescope.config.known_displays[panel_id] = {
+    pretty_name = panel_name,
+
+    colorimetry = (panel_colorimetry ~= nil) and panel_colorimetry,
+    dynamic_refresh_rates = (panel_refresh_rates ~= nil) and panel_refresh_rates,
+    hdr = (panel_hdr ~= nil) and panel_hdr,
+
     -- Detailed Timing Descriptors:
     -- DTD 1:  1920x1200  120.002 Hz   8:5   151.683 kHz 315.500 MHz (172 mm x 107 mm)
     --   Modeline "1920x1200_120.00" 315.500  1920 1968 2000 2080  1200 1254 1260 1264  -HSync -VSync
@@ -39,7 +42,7 @@ gamescope.config.known_displays.legiongos_lcd = {
         }
         local vfp = vfps[zero_index(refresh - 48)]
         if vfp == nil then
-            warn("Couldn't do refresh "..refresh.." on ROG Ally")
+            warn("Couldn't do refresh "..refresh.." on "..panel_name)
             return base_mode
         end
 
@@ -54,17 +57,19 @@ gamescope.config.known_displays.legiongos_lcd = {
 
     
     matches = function(display)
-        if display.vendor == "CSW" and display.model == "PN8007QB1-1" then
-            -- product: 0x0800
-            debug("[legos_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
-            return 5000
-        end
-        if display.vendor == "BOE" and display.model == "NS080WUM-LX1" then
-            -- product: 0x0C00
-            debug("[legos_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
-            return 5000
+        local lcd_types = {
+            { vendor = "CSW", model = "PN8007QB1-1", name = "Lenovo Legion Go S LCD" }, -- product: 0x0800
+            { vendor = "BOE", model = "NS080WUM-LX1", name = "Lenovo Legion Go S LCD" }, -- product: 0x0C00
+            { vendor = "CSW", model = "PN8007QB1-2", name = "MSI Claw 8" }, -- product: 0x0801
+        }
+
+        for index, value in ipairs(lcd_types) do
+            if value.vendor == display.vendor and value.model == display.model then
+                info("["..value.name.."] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
+                return 5000
+            end
         end
         return -1
     end
 }
-debug("Registered Lenovo Legion Go S LCD as a known display")
+debug("Registered "..panel_name.." as a known display")
