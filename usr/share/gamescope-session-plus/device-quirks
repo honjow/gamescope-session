@@ -84,6 +84,18 @@ if [[ ":$OXP_X1_144_LIST:" =~ ":$SYS_ID:"  ]]; then
   export STEAM_DISPLAY_REFRESH_LIMITS=60,144
 fi
 
+# OXP G1 Intel Devices
+OXP_G1_INTEL_LIST="ONEXPLAYER G1 i"
+if [[ ":$OXP_G1_INTEL_LIST:" =~ ":$SYS_ID:"  ]]; then
+  PANEL_TYPE=internal
+  USE_ROTATION_SHADER=1
+  ORIENTATION=left
+  CUSTOM_REFRESH_RATES=60,144
+
+  # Set refresh rate range and enable refresh rate switching
+  export STEAM_DISPLAY_REFRESH_LIMITS=60,144
+fi
+
 # OXP oled Devices
 OXP_OLED_LIST="ONEXPLAYER F1 EVA-02:ONEXPLAYER F1Pro:ONEXPLAYER F1 OLED"
 if [[ ":$OXP_OLED_LIST:" =~ ":$SYS_ID:"  ]]; then
