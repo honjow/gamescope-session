@@ -44,10 +44,16 @@ gamescope.config.known_displays[panel_id] = {
   end,
 
   matches = function(display)
-    -- There is only a single panel in use on the Lenovo Legion Go.
-    if display.vendor == "LEN" and display.model == "Go Display" and display.product == 0x0001 then
-      debug("[lenovo_legiongo_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product: "..display.product)
-      return 5000
+    local lcd_types = {
+      { vendor = "LEN", model = "Go Display", product = 0x0001, name = "Lenovo Legion Go LCD" },
+      { vendor = "HSX", model = "YHB03P24", product = 0x0324, name = "ONEXPLAYER X1 mini/GPD G1628-04" },
+    }
+
+    for index, value in ipairs(lcd_types) do
+      if value.vendor == display.vendor and value.model == display.model and value.product == display.product then
+        debug("[lenovo_legiongo_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product: "..display.product)
+        return 5000
+      end
     end
     return -1
   end
