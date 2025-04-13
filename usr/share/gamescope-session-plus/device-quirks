@@ -31,7 +31,6 @@ OXP_LIST="ONE XPLAYER:ONEXPLAYER 1 T08:ONEXPLAYER 1S A08:ONEXPLAYER 1S T08:ONEXP
 AOK_LIST="AOKZOE A1 AR07:AOKZOE A1 Pro:AOKZOE A2 Pro"
 if [[ ":$OXP_LIST:" =~ ":$SYS_ID:"  ]] || [[  ":$AOK_LIST:" =~ ":$SYS_ID:"   ]]; then
   DRM_MODE=fixed
-  # PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=40-60
 
@@ -42,7 +41,6 @@ fi
 # OXP 120Hz Devices
 OXP_120_LIST="ONEXPLAYER F1:ONEXPLAYER F1 EVA-01"
 if [[ ":$OXP_120_LIST:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   DRM_MODE=custom
   DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
@@ -53,7 +51,6 @@ fi
 
 # OXP Fly
 if [[ "$SYS_ID" =~ "ONEXPLAYER F1" ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   DRM_MODE=custom
   DRM_MODE_CUSTOM_DIR=/usr/share/gamescope-session-plus/modelines
@@ -65,7 +62,6 @@ fi
 # OXP X1 Devices
 OXP_X1_LIST="ONEXPLAYER X1 A"
 if [[ ":$OXP_X1_LIST:" =~ ":$SYS_ID:"  ]]; then
-  PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=60,120
 
@@ -76,7 +72,6 @@ fi
 # OXP X1 144Hz Devices
 OXP_X1_144_LIST="ONEXPLAYER X1 mini"
 if [[ ":$OXP_X1_144_LIST:" =~ ":$SYS_ID:"  ]]; then
-  PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=60,144
 
@@ -118,7 +113,6 @@ fi
 # AYANEO AIR, SLIDE Devices
 AIR_LIST="AIR:AIR Pro:AIR Plus:SLIDE:AIR 1S:AIR 1S Limited"
 if [[ ":$AIR_LIST:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=40-60
 fi
@@ -126,7 +120,6 @@ fi
 # AYANEO AIR Plus, SLIDE Devices
 AIR_PLUS_LIST="AIR Plus:SLIDE"
 if [[ ":$AIR_PLUS_LIST:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   if not_lua_exists "AYA-AYANEOHD.lua"; then
       CUSTOM_REFRESH_RATES=40-60
@@ -137,7 +130,6 @@ fi
 
 # AYANEO FLIP Dual Screen
 if [[ ":FLIP DS:" =~ ":$SYS_ID:" ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   OUTPUT_CONNECTOR='*,eDP-1,eDP-2' # prefer the top screen
 fi
@@ -290,7 +282,6 @@ fi
 # ROG Ally & ROG Ally X
 ALLY_LIST="ROG Ally RC71L_RC71L:ROG Ally RC71L:ROG Ally X RC72LA"
 if [[ ":$ALLY_LIST:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ADAPTIVE_SYNC=1
   ENABLE_VRR_MODESET=1
   ENABLE_HACKY_TEXTURE=1
@@ -327,7 +318,6 @@ fi
 
 # Minisforum V3
 if [[ ":V3:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ADAPTIVE_SYNC=1
   ENABLE_VRR_MODESET=1
   ENABLE_HACKY_TEXTURE=1
@@ -348,7 +338,6 @@ fi
 # ZOTAC Devices
 ZOTAC_LIST="ZOTAC GAMING ZONE"
 if [[ ":$ZOTAC_LIST:" =~ ":$SYS_ID:"  ]]; then
-  # PANEL_TYPE=external
   ORIENTATION=left
   CUSTOM_REFRESH_RATES=60,90,120
 
