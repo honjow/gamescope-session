@@ -23,7 +23,7 @@ post_client_shutdown() {
 }
 
 before_client_start() {
-    if [ $(command -v sk-fix-games) ]; then
+    if [ -x "$(command -v sk-fix-games)" ]; then
         sk-fix-games || true
     fi
     audio_fix &
@@ -34,6 +34,15 @@ audio_fix() {
         sleep 10
         echo ">>>>>>>>>>>>>>>>>>>>>>> Running sk-audio-setup"
         sk-audio-setup
+    fi
+}
+
+restart_steamos_manager() {
+    local delay=${1:-0}
+    sleep $delay
+    if systemctl --user cat steamos-manager.service 1>/dev/null; then
+        echo "**************** Restarting steamos-manager.service ****************"
+        systemctl --user restart steamos-manager.service
     fi
 }
 
@@ -431,7 +440,7 @@ while true; do
     if [[ "$SECONDS" -gt "$gamescope_retry_duration" ]]; then 
         if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
             echo ">>>>>> pkill gamescope"
-            pkill -HUP gamescope
+            kill -HUP "$gamescope_pid"
         else
             break
         fi
@@ -466,6 +475,8 @@ if command -v mangoapp >/dev/null; then
     done) &
 fi
 
+restart_steamos_manager 0 &
+
 # Handle Galileo Mura Correction
 # This is applied here and not in device-quirks because it must be called after gamescope has started.
 if [[ ":Galileo:" =~ ":$SYS_ID:"  ]]; then
@@ -497,7 +508,7 @@ while true; do
     if [[ "$SECONDS" -gt "$session_retry_duration" ]]; then 
         if [[ -z "$(pidof steam 2>/dev/null)" && -z "$(pidof opengamepadui 2>/dev/null)" ]]; then
             echo ">>>>>> pkill gamescope and steam"
-            pkill -HUP gamescope && pkill -HUP steam
+            kill -HUP "$gamescope_pid" && kill -HUP "$(pidof steam)"
         else
             break
         fi
