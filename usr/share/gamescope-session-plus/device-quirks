@@ -105,6 +105,15 @@ if [[ ":$OXP_OLED_LIST:" =~ ":$SYS_ID:"  ]]; then
   fi
 fi
 
+# AOKZOE A1X
+AOK_A1X_LIST="AOKZOE A1X"
+if [[ ":$AOK_A1X_LIST:" =~ ":$SYS_ID:"  ]]; then
+  ORIENTATION=normal
+
+  # Set refresh rate range and enable refresh rate switching
+  export STEAM_DISPLAY_REFRESH_LIMITS=60,120
+fi
+
 # other OXP devices
 if [[ "$SYS_ID" =~ "ONEXPLAYER" && -z "$ORIENTATION" ]]; then
   ORIENTATION=left
