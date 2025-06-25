@@ -26,6 +26,10 @@ before_client_start() {
     if [ -x "$(command -v sk-fix-games)" ]; then
         sk-fix-games || true
     fi
+    if [ -x "$(command -v steam-launch-manager)" ]; then
+        steam-launch-manager update-db || echo "Failed to update steam-launch-manager database"
+        steam-launch-manager apply-all || echo "Failed to apply steam-launch-manager settings"
+    fi
     audio_fix &
 }
 
