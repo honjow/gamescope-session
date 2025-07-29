@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# Search for all VGA-compatible devices
+# Search for all GPU-related devices
+# Includes: VGA [0300], XGA [0301], 3D controller [0302], Display controller [0380]
 echo "Searching for VGA-compatible devices..."
-gpu_info=$(lspci -vnn 2>/dev/null | grep VGA)
+gpu_info=$(lspci -vnn 2>/dev/null | grep -E "(VGA|Display|3D|XGA)")
+
+# Alternative method using PCI class codes:
+# gpu_info=$(lspci -vnn 2>/dev/null | grep -E "\[(0300|0301|0302|0380)\]")
 
 if [ -z "$gpu_info" ]; then
   echo "No GPU devices found."
