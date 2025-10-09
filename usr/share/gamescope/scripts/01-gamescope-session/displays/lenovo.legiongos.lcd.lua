@@ -1,7 +1,7 @@
 -- Lenovo Legion Go S
 -- MSI Claw 8
 
-local panel_id = "lenovo_legiongo_lcd"
+local panel_id = "lenovo_legiongos_lcd"
 local panel_name = "Lenovo Legion Go S/MSI Claw 8 LCD"
 
 local panel_refresh_rates = {}
@@ -66,7 +66,7 @@ gamescope.config.known_displays[panel_id] = {
         for index, value in ipairs(lcd_types) do
             if value.vendor == display.vendor and value.model == display.model then
                 info("["..value.name.."] Matched vendor: "..display.vendor.." model: "..display.model.." product:"..display.product)
-                return 5000
+                return 5100
             end
         end
         return -1

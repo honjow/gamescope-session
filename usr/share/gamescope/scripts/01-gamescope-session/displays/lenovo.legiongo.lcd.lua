@@ -52,10 +52,11 @@ gamescope.config.known_displays[panel_id] = {
     for index, value in ipairs(lcd_types) do
       if value.vendor == display.vendor and value.model == display.model and value.product == display.product then
         debug("[lenovo_legiongo_lcd] Matched vendor: "..display.vendor.." model: "..display.model.." product: "..display.product)
-        return 5000
+        return 5100
       end
     end
     return -1
   end
 }
 debug("Registered Lenovo Legion Go LCD as a known display")
+debug(inspect(gamescope.config.known_displays.lenovo_legiongo_lcd))
