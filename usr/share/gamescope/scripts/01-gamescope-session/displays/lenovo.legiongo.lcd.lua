@@ -6,8 +6,8 @@ local panel_refresh_rates = { 60, 144 }
 for i = 125, 143 do
   table.insert(panel_refresh_rates, i)
 end
--- test 73-124
-for i = 73, 124 do
+-- test
+for i = 73, 110 do
   table.insert(panel_refresh_rates, i)
 end
 table.sort(panel_refresh_rates)
