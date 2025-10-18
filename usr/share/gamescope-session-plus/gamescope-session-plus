@@ -148,6 +148,13 @@ if [ -f /usr/share/gamescope-session-plus/device-quirks ]; then
     . /usr/share/gamescope-session-plus/device-quirks
 fi
 
+# Handle Nvidia GPUs
+if lsmod | grep -q '^nvidia'; then
+    # https://github.com/ValveSoftware/gamescope/pull/1671
+    export GAMESCOPE_WSI_HIDE_PRESENT_WAIT_EXT=1
+    export ENABLE_GAMESCOPE_HDR=1
+fi
+
 # Source client app specific configuration files
 set -a
 for i in ${CLIENT_CONFIG_DIR_USR}/${CLIENT} ${CLIENT_CONFIG_DIR_ETC}/${CLIENT} ${CLIENT_CONFIG_DIR_LOCAL}/${CLIENT}; do
@@ -281,11 +288,6 @@ if [ -z "$GAMESCOPECMD" ] ; then
         PANEL_TYPE_OPTION="--force-panel-type $PANEL_TYPE"
     fi
 
-	BYPASS_STEAM_RESOLUTION_OPTION=""
-    if [ -n "$BYPASS_STEAM_RESOLUTION" ] && gamescope_has_option "--bypass-steam-resolution"; then
-        BYPASS_STEAM_RESOLUTION_OPTION="--bypass-steam-resolution"
-    fi
-
     CUSTOM_REFRESH_RATES_OPTION=""
     if [ -n "$CUSTOM_REFRESH_RATES" ] && gamescope_has_option "--custom-refresh-rates"; then
         CUSTOM_REFRESH_RATES_OPTION="--custom-refresh-rates $CUSTOM_REFRESH_RATES"
@@ -356,21 +358,43 @@ if [ -z "$GAMESCOPECMD" ] ; then
     if [ -n "$GAMESCOPE_TOUCH_GESTURES" ] && gamescope_has_option "--touch-gestures"; then
         TOUCH_GESTURES_OPTION="--touch-gestures"
     fi
+
+    DISABLE_TOUCH_CLICK_OPTION=""
+    if [ -n "$DISABLE_TOUCH_CLICK" ] && gamescope_has_option "--disable-touch-click"; then
+        DISABLE_TOUCH_CLICK_OPTION="--disable-touch-click"
+    fi
+
+    HEADLESS_OPTION=""
+	if [ -n "$HEADLESS" ] && gamescope_has_option "--headless"; then
+		HEADLESS_OPTION="--headless"
+	fi
+
+    VRR_MODESET_OPTION=""
+    if [ -n "$ENABLE_VRR_MODESET" ] && gamescope_has_option "--enable-vrr-modesetting"; then
+        VRR_MODESET_OPTION="--enable-vrr-modesetting"
+    fi
+
+    DISABLE_HACKY_OPTION=""
+	if gamescope_has_option "--disable-hacky-texture"; then
+		if [ -n "$DISABLE_HACKY_TEXTURE" ]; then
+			DISABLE_HACKY_OPTION="--disable-hacky-texture"
+		fi
+	fi
     
-  HDR_OPTIONS=""
-  if [ "$ENABLE_GAMESCOPE_HDR" == "1" ] && [ "$ENABLE_GAMESCOPE_WSI" == "1" ] && gamescope_has_option "--hdr-enabled" && gamescope_has_option "--hdr-itm-enable"; then
-    HDR_OPTIONS="--hdr-enabled --hdr-itm-enable"
-    export ENABLE_HDR_WSI=1
-    export DXVK_HDR=1
-  fi
+    HDR_OPTIONS=""
+    if [ "$ENABLE_GAMESCOPE_HDR" == "1" ] && [ "$ENABLE_GAMESCOPE_WSI" == "1" ] && gamescope_has_option "--hdr-enabled" && gamescope_has_option "--hdr-itm-enable"; then
+      HDR_OPTIONS="--hdr-enabled --hdr-itm-enable"
+      export ENABLE_HDR_WSI=1
+      export DXVK_HDR=1
+    fi
 
-  if [ -n "$HDR_ENABLE_PQ" ] && [ "$HDR_ENABLE_PQ" == "1" ] && gamescope_has_option "--hdr-pq-internal-enable"; then
-	HDR_OPTIONS="$HDR_OPTIONS --hdr-pq-internal-enable"
-  fi
+    if [ -n "$HDR_ENABLE_PQ" ] && [ "$HDR_ENABLE_PQ" == "1" ] && gamescope_has_option "--hdr-pq-internal-enable"; then
+  	HDR_OPTIONS="$HDR_OPTIONS --hdr-pq-internal-enable"
+    fi
 
-  if [ -n "$GAMESCOPE_HDR_NITS" ] && gamescope_has_option "--hdr-itm-sdr-nits" && gamescope_has_option "--hdr-sdr-content-nits"; then
-    HDR_OPTIONS="$HDR_OPTIONS --hdr-itm-sdr-nits $GAMESCOPE_HDR_NITS --hdr-sdr-content-nits $GAMESCOPE_HDR_NITS"
-  fi
+    if [ -n "$GAMESCOPE_HDR_NITS" ] && gamescope_has_option "--hdr-itm-sdr-nits" && gamescope_has_option "--hdr-sdr-content-nits"; then
+      HDR_OPTIONS="$HDR_OPTIONS --hdr-itm-sdr-nits $GAMESCOPE_HDR_NITS --hdr-sdr-content-nits $GAMESCOPE_HDR_NITS"
+    fi
 
     GAMESCOPECMD="$(get_gamescope_binary) \
         $CURSOR \
@@ -378,12 +402,15 @@ if [ -z "$GAMESCOPECMD" ] ; then
         $INTERNAL_RESOLUTION \
         $ORIENTATION_OPTION \
         $DRM_MODE_OPTION $DRM_MODE_CUSTOM_DIR_OPTION \
-        $BYPASS_STEAM_RESOLUTION_OPTION \
         $ADAPTIVE_SYNC_OPTION \
         $PANEL_TYPE_OPTION \
         $CUSTOM_REFRESH_RATES_OPTION \
         $USE_ROTATION_SHADER_OPTION \
         $BACKEND_OPTION \
+        $DISABLE_TOUCH_CLICK_OPTION \
+        $HEADLESS_OPTION \
+        $VRR_MODESET_OPTION \
+        $DISABLE_HACKY_OPTION \
 		$HDR_OPTIONS \
         --prefer-output $OUTPUT_CONNECTOR \
         --xwayland-count $XWAYLAND_COUNT \
