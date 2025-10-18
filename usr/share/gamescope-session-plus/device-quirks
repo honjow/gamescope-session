@@ -117,7 +117,7 @@ if [[ ":$AOK_A1X_LIST:" =~ ":$SYS_ID:"  ]]; then
 fi
 
 # other OXP devices
-if [[ "$SYS_ID" =~ "ONEXPLAYER" && -z "$ORIENTATION" ]]; then
+if [[ "$SYS_ID" =~ "ONEXPLAYER" && -z "$ORIENTATION" && "$CPU_VENDOR" != "GenuineIntel" ]]; then
   ORIENTATION=left
 fi
 
