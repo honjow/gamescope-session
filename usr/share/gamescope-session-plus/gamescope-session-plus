@@ -414,7 +414,9 @@ if [[ "$short_session_count" -ge "$short_session_count_before_reset" ]]; then
     short_session_recover
 
     # rearm
-    rm "$short_session_tracker_file"
+    if [[ -f "$short_session_tracker_file" ]]; then
+        rm "$short_session_tracker_file"
+    fi
     exit 1
 fi
 
