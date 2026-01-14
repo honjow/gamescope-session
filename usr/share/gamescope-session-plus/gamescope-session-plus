@@ -14,7 +14,7 @@ short_session_recover() {
 
 # default empty function to run after gamescope is started
 post_gamescope_start() {
-	:
+    :
 }
 
 # default empty function to run after client exits
@@ -51,14 +51,14 @@ restart_steamos_manager() {
 }
 
 get_gamescope_binary() {
-	if [ -n "$GAMESCOPE_BIN" ]; then
-		echo $GAMESCOPE_BIN
-	# elif /usr/libexec/gamescope-sdl-workaround && command -v /usr/bin/gamescope-legacy > /dev/null; then
-	# 	# GPUs that require the SDL backend
-	# 	echo "/usr/bin/gamescope-legacy"
-	else
-		echo "/usr/bin/gamescope"
-	fi
+    if [ -n "$GAMESCOPE_BIN" ]; then
+        echo $GAMESCOPE_BIN
+    # elif /usr/libexec/gamescope-sdl-workaround && command -v /usr/bin/gamescope-legacy > /dev/null; then
+    # 	# GPUs that require the SDL backend
+    # 	echo "/usr/bin/gamescope-legacy"
+    else
+        echo "/usr/bin/gamescope"
+    fi
 }
 
 gamescope_has_option() {
@@ -78,10 +78,10 @@ export mesa_glthread=true
 # This should be used by default by gamescope. Cannot hurt to force it anyway.
 # Reported better framelimiting with this enabled
 if /usr/libexec/gamescope-sdl-workaround; then
-	# Skip on legacy hardware
-	export ENABLE_GAMESCOPE_WSI=0
+    # Skip on legacy hardware
+    export ENABLE_GAMESCOPE_WSI=0
 else
-	export ENABLE_GAMESCOPE_WSI=1
+    export ENABLE_GAMESCOPE_WSI=1
 fi
 
 # Force Qt applications to run under xwayland
@@ -91,8 +91,11 @@ export QT_QPA_PLATFORM=xcb
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 
 # Enable Mangoapp
+export STEAM_MANGOAPP_PRESETS_SUPPORTED=1
+export STEAM_USE_MANGOAPP=1
 export MANGOHUD_CONFIGFILE=$(mktemp /tmp/mangohud.XXXXXXXX)
 
+export STEAM_USE_DYNAMIC_VRS=1
 export RADV_FORCE_VRS_CONFIG_FILE=$(mktemp /tmp/radv_vrs.XXXXXXXX)
 
 # Plop GAMESCOPE_MODE_SAVE_FILE into $XDG_CONFIG_HOME (defaults to ~/.config).
@@ -116,6 +119,8 @@ touch "$GAMESCOPE_PATCHED_EDID_FILE"
 # and Gamescope will use for now.
 export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
 
+export STEAM_GAMESCOPE_HDR_SUPPORTED=1
+
 # Workaround older versions of vkd3d-proton setting this
 # too low (desc.BufferCount), resulting in symptoms that are potentially like
 # swapchain starvation.
@@ -135,13 +140,126 @@ echo "1x1" >"$RADV_FORCE_VRS_CONFIG_FILE"
 # To expose vram info from radv
 export WINEDLLOVERRIDES=dxgi=n
 
+# Enable dynamic backlight, we have the kernel patch to disable events
+export STEAM_ENABLE_DYNAMIC_BACKLIGHT=1
+
+# Enabled fan control toggle in steam
+export STEAM_ENABLE_FAN_CONTROL=1
+
+# Enable volume key management via steam for this session
+export STEAM_ENABLE_VOLUME_HANDLER=1
+
+# Have SteamRT's xdg-open send http:// and https:// URLs to Steam
+export SRT_URLOPEN_PREFER_STEAM=1
+
+# Disable automatic audio device switching in steam, now handled by wireplumber
+export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
+
+# Enable support for xwayland isolation per-game in Steam
+export STEAM_MULTIPLE_XWAYLANDS=1
+
+# We have the Mesa integration for the fifo-based dynamic fps-limiter
+export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
+
+# Support for gamescope tearing with GAMESCOPE_ALLOW_TEARING atom
+export STEAM_GAMESCOPE_HAS_TEARING_SUPPORT=1
+
+# We have NIS support
+export STEAM_GAMESCOPE_NIS_SUPPORTED=1
+
+# Enable tearing controls in steam
+export STEAM_GAMESCOPE_TEARING_SUPPORTED=1
+
+# Enable VRR controls in steam
+export STEAM_GAMESCOPE_VRR_SUPPORTED=1
+
+# When set to 1, a toggle will show up in the steamui to control whether dynamic refresh rate is applied to the steamui
+export STEAM_GAMESCOPE_DYNAMIC_REFRESH_IN_STEAM_SUPPORTED=0
+
+# Allow status LED brightness control
+export STEAM_ENABLE_STATUS_LED_BRIGHTNESS=1
+
 # Don't wait for buffers to idle on the client side before sending them to gamescope
 export vk_xwayland_wait_ready=false
+
+# Let steam know it can unmount drives without superuser privileges
+export STEAM_ALLOW_DRIVE_UNMOUNT=1
+
+# Allow formatting external drives
+export STEAM_ALLOW_DRIVE_ADOPT=1
+
+# We no longer need to set GAMESCOPE_EXTERNAL_OVERLAY from steam, mangoapp now does it itself
+export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+
+# Enable horizontal mangoapp bar
+export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
+
+# Scaling support
+export STEAM_GAMESCOPE_FANCY_SCALING_SUPPORT=1
+
+# Color management support
+export STEAM_GAMESCOPE_COLOR_MANAGED=1
+export STEAM_GAMESCOPE_VIRTUAL_WHITE=1
+
+# HDMI-CEC support
+export STEAM_ENABLE_CEC=1
+
+# Set input method modules for Qt/GTK that will show the Steam keyboard
+export QT_IM_MODULE=steam
+export GTK_IM_MODULE=Steam
+
+# Make Qt apps use the styling and behaviour of the desktop session
+# This fixes some missing icons and unreadable text with Qt desktop apps in gamescope
+export QT_QPA_PLATFORM_THEME=kde
+
+# TODO!
+# Bring this back when gamescope side is more complete
+#
+# Remove vsync handling from Xwayland, we handle it in gamescope
+#export vblank_mode=0
+#export MESA_VK_WSI_PRESENT_MODE=immediate
 
 # To play nice with the short term callback-based limiter for now
 export GAMESCOPE_LIMITER_FILE=$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
 
+# Temporary crutch until dummy plane interactions / etc are figured out
+export GAMESCOPE_DISABLE_ASYNC_FLIPS=1
+
+export XCURSOR_THEME=steam
+export XCURSOR_SCALE=256
+
+# Workaround for Steam login issue while Steam client change propagates out of Beta
+touch ~/.steam/root/config/SteamAppData.vdf || true
+
 ulimit -n 524288
+
+# 1048576 = 1M - passing it like that omits the 'M' suffix - xargs removes whitespace
+free_disk_space_megs=$(df ~/ --output=avail -B1048576 | sed -n '2 p' | xargs)
+minimum_free_disk_space_needed_megs=500
+
+if [[ "$free_disk_space_megs" -lt "$minimum_free_disk_space_needed_megs" ]]; then
+    echo >&2 "gamescope-session: not enough disk space to proceed, trying to find game to delete"
+
+    find ~/.local/share/Steam/steamapps/common/ -mindepth 1 -maxdepth 1 -type d -printf "%T@ %p\0" | sort -n -z | while IFS= read -r -d $'\0' line; do
+        timestamp=${line%% *}
+                game_folder=${line#* }
+
+        [[ -d $game_folder ]]  || continue
+
+        acf=$(grep -F -- "$(basename -- "$game_folder")" ~/.local/share/Steam/steamapps/*.acf | grep \"installdir\" | cut -d: -f1)
+        [[ -e "$acf" ]] || continue
+
+        echo >&2 "gamescope-session: deleting $(basename "$game_folder")"
+        appid=$(basename "$acf" | cut -d_ -f2 | cut -d. -f1)
+
+        # TODO leave a note for Steam to display UI to explain what happened, if this logic stays
+        # intentionally leave compatdata; could be unclouded save files there
+        rm -rf --one-file-system -- "$game_folder" "$acf" ~/.local/share/Steam/steamapps/shadercache/"$appid"
+
+        free_disk_space_megs=$(df ~/ --output=avail -B1048576 | sed -n '2 p' | xargs)
+        [[ "$free_disk_space_megs" -lt "$minimum_free_disk_space_needed_megs" ]] || break
+    done
+fi
 
 # Source device quirks if exists
 if [ -f /usr/share/gamescope-session-plus/device-quirks ]; then
@@ -165,7 +283,7 @@ set +a
 # Source user configuration from /etc/environment.d and ~/.config/environment.d
 set -a
 for i in /etc/environment.d/*.conf; do
-	[[ -f "${i}" ]] && . "${i}"
+    [[ -f "${i}" ]] && . "${i}"
 done
 for i in "${HOME}"/.config/environment.d/*.conf; do
     [[ -f "${i}" ]] && . "${i}"
@@ -223,6 +341,20 @@ else
     echo >&2 "!! Failed to claim global gamescope stats session"
 fi
 
+# read_gamescope_env() {
+#     if read -r -t 3 response_x_display response_wl_display <> "$socket"; then
+#         export DISPLAY="$response_x_display"
+#         export GAMESCOPE_WAYLAND_DISPLAY="$response_wl_display"
+
+#         # Sync environment variables to systemd, then notify we are ready to launch subsequent services
+#         env > $XDG_RUNTIME_DIR/gamescope-environment
+#         systemd-notify --ready
+#     fi
+# }
+
+# # Spawned in parallel to read values from gamescope
+# (read_gamescope_env &)
+
 if [ -z "$GAMESCOPECMD" ] ; then
     # Set default values
     : "${DRM_MODE:=fixed}"
@@ -253,7 +385,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     RESOLUTION=""
-	if [ -n "$SCREEN_WIDTH" ] && [ -n "$SCREEN_HEIGHT" ]; then
+    if [ -n "$SCREEN_WIDTH" ] && [ -n "$SCREEN_HEIGHT" ]; then
         RESOLUTION="-W $SCREEN_WIDTH -H $SCREEN_HEIGHT"
     fi
 
@@ -299,15 +431,15 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     USE_ROTATION_SHADER_OPTION=""
-	if [ -n "$USE_ROTATION_SHADER" ] && gamescope_has_option "--use-rotation-shader"; then
-		USE_ROTATION_SHADER_OPTION="--use-rotation-shader $USE_ROTATION_SHADER"
-	fi
+    if [ -n "$USE_ROTATION_SHADER" ] && gamescope_has_option "--use-rotation-shader"; then
+        USE_ROTATION_SHADER_OPTION="--use-rotation-shader $USE_ROTATION_SHADER"
+    fi
 
     BACKEND_OPTION=""
-	# Check if an older GPU that needs the SDL workaround is in use.
-	if [ -n "$BACKEND" ] && gamescope_has_option "--backend"; then
-		BACKEND_OPTION="--backend $BACKEND"
-	fi
+    # Check if an older GPU that needs the SDL workaround is in use.
+    if [ -n "$BACKEND" ] && gamescope_has_option "--backend"; then
+        BACKEND_OPTION="--backend $BACKEND"
+    fi
 
     TAP_TO_CLICK_OPTION=""
     if [ -n "$GAMESCOPE_TAP_TO_CLICK" ] && gamescope_has_option "--tap-to-click"; then
@@ -335,9 +467,9 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     HEADLESS_OPTION=""
-	if [ -n "$HEADLESS" ] && gamescope_has_option "--headless"; then
-		HEADLESS_OPTION="--headless"
-	fi
+    if [ -n "$HEADLESS" ] && gamescope_has_option "--headless"; then
+        HEADLESS_OPTION="--headless"
+    fi
 
     VRR_MODESET_OPTION=""
     if [ -n "$ENABLE_VRR_MODESET" ] && gamescope_has_option "--enable-vrr-modesetting"; then
@@ -345,11 +477,11 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     DISABLE_HACKY_OPTION=""
-	if gamescope_has_option "--disable-hacky-texture"; then
-		if [ -n "$DISABLE_HACKY_TEXTURE" ]; then
-			DISABLE_HACKY_OPTION="--disable-hacky-texture"
-		fi
-	fi
+    if gamescope_has_option "--disable-hacky-texture"; then
+        if [ -n "$DISABLE_HACKY_TEXTURE" ]; then
+            DISABLE_HACKY_OPTION="--disable-hacky-texture"
+        fi
+    fi
     
     HDR_OPTIONS=""
     if [ "$ENABLE_GAMESCOPE_HDR" == "1" ] && [ "$ENABLE_GAMESCOPE_WSI" == "1" ] && gamescope_has_option "--hdr-enabled" && gamescope_has_option "--hdr-itm-enable"; then
@@ -359,7 +491,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
     fi
 
     if [ -n "$HDR_ENABLE_PQ" ] && [ "$HDR_ENABLE_PQ" == "1" ] && gamescope_has_option "--hdr-pq-internal-enable"; then
-  	HDR_OPTIONS="$HDR_OPTIONS --hdr-pq-internal-enable"
+      HDR_OPTIONS="$HDR_OPTIONS --hdr-pq-internal-enable"
     fi
 
     if [ -n "$GAMESCOPE_HDR_NITS" ] && gamescope_has_option "--hdr-itm-sdr-nits" && gamescope_has_option "--hdr-sdr-content-nits"; then
@@ -381,7 +513,7 @@ if [ -z "$GAMESCOPECMD" ] ; then
         $HEADLESS_OPTION \
         $VRR_MODESET_OPTION \
         $DISABLE_HACKY_OPTION \
-		$HDR_OPTIONS \
+        $HDR_OPTIONS \
         --prefer-output $OUTPUT_CONNECTOR \
         --xwayland-count $XWAYLAND_COUNT \
         --default-touch-mode $TOUCH_MODE \
@@ -451,9 +583,12 @@ done &
 if read -r -t 15 response_x_display response_wl_display <> "$socket"; then
     export DISPLAY="$response_x_display"
     export GAMESCOPE_WAYLAND_DISPLAY="$response_wl_display"
-    # We're done!
+    
+    # Sync environment variables to systemd, then notify we are ready to launch subsequent services
+    env > $XDG_RUNTIME_DIR/gamescope-environment
+    systemd-notify --ready
 else
-	echo "gamescope failed" >>"$short_session_tracker_file"
+    echo "gamescope failed" >>"$short_session_tracker_file"
     kill -9 "$gamescope_pid"
     wait -n "$gamescope_pid"
     exit 1
@@ -471,7 +606,7 @@ fi
 # If we have mangoapp binary start it
 if command -v mangoapp >/dev/null; then
     (while true; do
-		mangoapp
+        mangoapp
     done) &
 fi
 
@@ -530,7 +665,7 @@ while [[ -n "$(pidof steam 2>/dev/null)" || -n "$(pidof opengamepadui 2>/dev/nul
 done
 
 if [[ "$SECONDS" -lt "$short_session_duration" ]]; then
-	echo "${CLIENT} failed" >>"$short_session_tracker_file"
+    echo "${CLIENT} failed" >>"$short_session_tracker_file"
 else
     rm "$short_session_tracker_file"
 fi
