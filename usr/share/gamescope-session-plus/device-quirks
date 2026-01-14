@@ -251,7 +251,7 @@ if [[ ":Jupiter:Galileo:" =~ ":$SYS_ID:" ]]; then
   DRM_MODE=fixed
 
   # Enables the adaptive brightness toggle
-  export STEAM_ENABLE_DYNAMIC_BACKLIGHT=1
+  # export STEAM_ENABLE_DYNAMIC_BACKLIGHT=1
   # Allows the fan controller service to be toggled from gamemode
   export STEAM_ENABLE_FAN_CONTROL=1
   # Sets CPU topology for Steam Deck hardware
