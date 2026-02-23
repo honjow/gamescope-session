@@ -12,20 +12,20 @@ CPU_MODEL=$(cat /proc/cpuinfo | grep "model name" | head -n 1 | cut -d : -f 2 | 
 # SYS_ID="$(cat /sys/devices/virtual/dmi/id/product_name)"
 # CPU_VENDOR="$(lscpu | grep "Vendor ID" | cut -d : -f 2 | xargs)"
 
-# Detect screen resolution
-SCREEN_WIDTH=$(cat /sys/class/graphics/fb0/virtual_size 2>/dev/null | cut -d ',' -f 1 || echo "1280")
-SCREEN_HEIGHT=$(cat /sys/class/graphics/fb0/virtual_size 2>/dev/null | cut -d ',' -f 2 || echo "800")
+# Detect physical screen resolution
+_PHYS_WIDTH=$(cat /sys/class/graphics/fb0/virtual_size 2>/dev/null | cut -d ',' -f 1 || echo "1280")
+_PHYS_HEIGHT=$(cat /sys/class/graphics/fb0/virtual_size 2>/dev/null | cut -d ',' -f 2 || echo "800")
 
 # Fallback to xrandr if fb0 doesn't exist
-if [ "$SCREEN_WIDTH" == "1280" ] && command -v xrandr &> /dev/null; then
+if [ "$_PHYS_WIDTH" == "1280" ] && command -v xrandr &> /dev/null; then
     RESOLUTION=$(xrandr 2>/dev/null | grep '*' | awk '{print $1}' | head -n1)
     if [ -n "$RESOLUTION" ]; then
-        SCREEN_WIDTH=$(echo "$RESOLUTION" | cut -d 'x' -f 1)
-        SCREEN_HEIGHT=$(echo "$RESOLUTION" | cut -d 'x' -f 2)
+        _PHYS_WIDTH=$(echo "$RESOLUTION" | cut -d 'x' -f 1)
+        _PHYS_HEIGHT=$(echo "$RESOLUTION" | cut -d 'x' -f 2)
     fi
 fi
 
-echo "detected resolution: ${SCREEN_WIDTH}x${SCREEN_HEIGHT}"
+echo "detected resolution: ${_PHYS_WIDTH}x${_PHYS_HEIGHT}"
 
 SCRIPTS_DIR="/usr/share/gamescope/scripts/"
 
@@ -432,6 +432,6 @@ fi
 
 
 # override orientation if width is greater than height
-if [[ "$SCREEN_WIDTH" -gt "$SCREEN_HEIGHT" && ( "$ORIENTATION" == "left" || "$ORIENTATION" == "right" ) ]]; then
+if [[ "$_PHYS_WIDTH" -gt "$_PHYS_HEIGHT" && ( "$ORIENTATION" == "left" || "$ORIENTATION" == "right" ) ]]; then
   ORIENTATION=normal
 fi
