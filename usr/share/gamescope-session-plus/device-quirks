@@ -430,6 +430,17 @@ if [ -f "$xg_mobile_file_path" ]; then
   fi
 fi
 
+# ROG Strix G513QY_G513QY
+if [[ ":ROG Strix G513QY_G513QY:" =~ ":$SYS_ID:" ]]; then
+  DP_STATUS=$(cat /sys/class/drm/card1-DP-1/status 2>/dev/null)
+  unset VULKAN_ADAPTER
+  if [[ "$DP_STATUS" == "connected" ]]; then
+    if lspci -nn | grep -q "1002:73df"; then
+      export VULKAN_ADAPTER="1002:73df"
+    fi
+  fi
+fi
+
 
 # override orientation if width is greater than height
 if [[ "$_PHYS_WIDTH" -gt "$_PHYS_HEIGHT" && ( "$ORIENTATION" == "left" || "$ORIENTATION" == "right" ) ]]; then
