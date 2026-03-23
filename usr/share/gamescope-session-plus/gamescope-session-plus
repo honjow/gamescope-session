@@ -23,6 +23,9 @@ post_client_shutdown() {
 }
 
 before_client_start() {
+    if [ -x "$(command -v sk-steam-config-defaults)" ]; then
+        sk-steam-config-defaults || true
+    fi
     if [ -x "$(command -v sk-fix-games)" ]; then
         sk-fix-games || true
     fi
