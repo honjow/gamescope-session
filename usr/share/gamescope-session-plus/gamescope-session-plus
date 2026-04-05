@@ -80,12 +80,8 @@ export mesa_glthread=true
 
 # This should be used by default by gamescope. Cannot hurt to force it anyway.
 # Reported better framelimiting with this enabled
-if /usr/libexec/gamescope-sdl-workaround; then
-    # Skip on legacy hardware
-    export ENABLE_GAMESCOPE_WSI=0
-else
-    export ENABLE_GAMESCOPE_WSI=1
-fi
+# gamescope-sdl-workaround was removed; legacy SDL path is unavailable.
+export ENABLE_GAMESCOPE_WSI=1
 
 # Force Qt applications to run under xwayland
 export QT_QPA_PLATFORM=xcb
@@ -637,7 +633,13 @@ fi
 SECONDS=0
 
 # Start client application
-$CLIENTCMD &
+# Launched with switcheroo to match KDE & GNOME behavior for apps with
+# UseAlternativeGPU in their desktop file (e.g. Steam).
+if command -v /usr/bin/switcherooctl >/dev/null; then
+    /usr/bin/switcherooctl launch $CLIENTCMD &
+else
+    $CLIENTCMD &
+fi
 
 # auto pkill to retry session
 while true; do

@@ -22,7 +22,7 @@ The session sources environment from `~/.config/environment.d/*.conf` files.
 The easiest way to configure the session is to create `~/.config/environment.d/gamescope-session-plus.conf`
 and set variables there:
 
-```
+```bash
 # Size of the screen. If not set gamescope will detect native resolution from drm.
 SCREEN_HEIGHT=2160
 SCREEN_WIDTH=3840
@@ -80,7 +80,7 @@ We also need to create `/usr/share/wayland-sessions/gamescope-session-video.desk
 defining the session so it appears as an option in our Display Manager/Login screen.
 
 In our example, this could be:
-```
+```ini
 [Desktop Entry]
 Encoding=UTF-8
 Name=Video
@@ -104,7 +104,7 @@ Gamescope embedded mode (which is used by gamescope-session-plus) is tightly int
 
 Steam interacts with gamescope by setting properties on Xorg windows. By default, if you launch an application with the gamescope session by overriding the `CLIENTCMD` environment variable you may notice that you only see a black screen. That is because gamescope will only show windows when the `STEAM_GAME` property is present on the window. In most cases, all you will need to do is set this property on your application window to any value and the window should appear.
 
-One way to do this is to use the ChimeraOS [gamescope-fg](https://github.com/ChimeraOS/chimera/blob/master/bin/gamescope-fg) tool to launch your application, like so:
+One way to do this is to use the ChimeraOS [gamescope-fg](https://github.com/ChimeraOS/chimera/blob/master/libexec/gamescope-fg) tool to launch your application, like so:
 
 `gamescope-fg my-application arg1 arg2 ... argN`
 

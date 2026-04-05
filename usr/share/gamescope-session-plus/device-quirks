@@ -30,7 +30,7 @@ echo "detected resolution: ${_PHYS_WIDTH}x${_PHYS_HEIGHT}"
 SCRIPTS_DIR="/usr/share/gamescope/scripts/"
 
 function not_lua_exists() {
-  # 返回值 1:存在 0:不存在
+  # Returns 0 when no file named $1 exists under SCRIPTS_DIR; 1 when it does.
   local dir=${2:-$SCRIPTS_DIR}
   local file=$1
   files=$(find $dir -name $file -type f 2>/dev/null)
@@ -75,7 +75,6 @@ if [[ ":$OXP_X1_LIST:" =~ ":$SYS_ID:"  ]]; then
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=60,120
 fi
-
 
 OXP_X1_LIST="ONEXPLAYER X1 A"
 if [[ ":$OXP_X1_LIST:" =~ ":$SYS_ID:"  ]]; then
@@ -203,6 +202,11 @@ fi
 
 #GPD Win 4 supports 40-60hz refresh rate changing
 if [[ ":G1618-04:" =~ ":$SYS_ID:"  ]]; then
+  ORIENTATION=""
+  # Support for custom display firmware flash that disables the landscape screen rotation (which adds input latency)
+  if ( xrandr --prop 2>/dev/null | grep -e "1080x1920 " > /dev/null ) ; then
+     ORIENTATION=right
+  fi
   if not_lua_exists "GPD-G1618-04.lua"; then
       CUSTOM_REFRESH_RATES=40-60
   fi
@@ -379,7 +383,6 @@ if [[ ":V3:" =~ ":$SYS_ID:"  ]]; then
   # Set refresh rate range and enable refresh rate switching
   export STEAM_DISPLAY_REFRESH_LIMITS=36,165
 fi
-
 
 # ZOTAC Devices
 ZOTAC_LIST="ZOTAC GAMING ZONE"
