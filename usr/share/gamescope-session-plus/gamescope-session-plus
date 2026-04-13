@@ -7,6 +7,8 @@ declare -r CLIENT_CONFIG_DIR_USR=/usr/share/gamescope-session-plus/sessions.d
 declare -r CLIENT_CONFIG_DIR_ETC=/etc/gamescope-session-plus/sessions.d
 declare -r CLIENT_CONFIG_DIR_LOCAL="${XDG_CONFIG_HOME:-$HOME/.config}/gamescope-session-plus/sessions.d"
 
+pre_start_script_pids=()
+
 # default empty session recovery function
 short_session_recover() {
     :
@@ -22,6 +24,32 @@ post_client_shutdown() {
     :
 }
 
+run_pre_start_scripts() {
+    local dirs=(
+        "/usr/share/gamescope-session-plus/pre-start.d"
+        "/etc/gamescope-session-plus/pre-start.d"
+        "${XDG_CONFIG_HOME:-$HOME/.config}/gamescope-session-plus/pre-start.d"
+    )
+    for dir in "${dirs[@]}"; do
+        [[ -d "$dir" ]] || continue
+        for script in "$dir"/*; do
+            [[ -x "$script" ]] || continue
+            echo "Running pre-start script: $script"
+            "$script" &
+            pre_start_script_pids+=("$!")
+        done
+    done
+}
+
+kill_pre_start_scripts() {
+    for pid in "${pre_start_script_pids[@]}"; do
+        if kill -0 "$pid" 2>/dev/null; then
+            echo "Stopping pre-start script pid $pid"
+            kill "$pid" 2>/dev/null || true
+        fi
+    done
+}
+
 before_client_start() {
     if [ -x "$(command -v sk-steam-config-defaults)" ]; then
         sk-steam-config-defaults || true
@@ -34,6 +62,7 @@ before_client_start() {
         steam-launch-manager apply-all || echo "Failed to apply steam-launch-manager settings"
     fi
     audio_fix &
+    run_pre_start_scripts
 }
 
 audio_fix() {
@@ -677,6 +706,8 @@ else
 fi
 
 post_client_shutdown
+
+kill_pre_start_scripts
 
 # When the client exits, kill gamescope nicely
 kill $gamescope_pid
