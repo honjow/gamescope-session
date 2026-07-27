@@ -104,7 +104,7 @@ gamescope_has_option() {
 # Fix intel color corruption
 # might come with some performance degradation but is better than a corrupted
 # color image
-export INTEL_DEBUG=norbc
+# export INTEL_DEBUG=norbc
 export mesa_glthread=true
 
 # This should be used by default by gamescope. Cannot hurt to force it anyway.
